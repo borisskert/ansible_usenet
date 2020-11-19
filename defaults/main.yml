@@ -19,7 +19,7 @@ usenet_sonarr_downloads_volume_directory: "{{ usenet_sonarr_volume_directory }}/
 
 usenet_sabnzbd_network_interface: 0.0.0.0
 usenet_sabnzbd_http_port: 8080
-usenet_sabnzbd_https_port: 8080
+usenet_sabnzbd_https_port: 9090
 
 usenet_sonarr_network_interface: 0.0.0.0
 usenet_sonarr_http_port: 8989

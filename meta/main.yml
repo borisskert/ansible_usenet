@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: borisskert
-  description: Installation role for nextcloud docker container
+  description: Installation role for usenet (sabnzbd and sonarr) docker container
   min_ansible_version: 2.9
   license: MIT
   platforms:

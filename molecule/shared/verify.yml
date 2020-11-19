@@ -6,7 +6,7 @@
   tasks:
     - name: Should template docker-compose file
       slurp:
-        src: /opt/usenext/docker/docker-compose.yml
+        src: /opt/usenet/docker/docker-compose.yml
       register: docker_compose_file
       failed_when:
         not docker_compose_file.content == ( expected_content | b64encode )
@@ -100,3 +100,50 @@
         and sonarr_downloads_volume_directory.stat.gid == 666
         and sonarr_downloads_volume_directory.stat.mode == '0750'
         )
+
+    - name: Should usenet systemd unit file
+      slurp:
+        src: /etc/systemd/system/usenet.service
+      register: usenet_service_file
+      failed_when:
+        not usenet_service_file.content == ( expected_content | b64encode )
+      vars:
+        expected_content: |
+          [Install]
+          WantedBy=multi-user.target
+
+          [Unit]
+          Description=usenet service
+          After=docker.service
+          Requires=docker.service
+
+          [Service]
+          ExecStartPre=-/usr/local/bin/docker-compose \
+            --project-directory /opt/usenet/docker \
+            --file /opt/usenet/docker/docker-compose.yml \
+            --project-name usenet \
+            down \
+            --remove-orphans
+
+          ExecStartPre=/usr/local/bin/docker-compose \
+            --project-directory /opt/usenet/docker \
+            --file /opt/usenet/docker/docker-compose.yml \
+            --project-name usenet \
+            pull
+
+          ExecStart=/usr/local/bin/docker-compose \
+            --project-directory /opt/usenet/docker \
+            --file /opt/usenet/docker/docker-compose.yml \
+            --project-name usenet \
+            up
+
+          ExecStop=/usr/local/bin/docker-compose \
+            --project-directory /opt/usenet/docker \
+            --file /opt/usenet/docker/docker-compose.yml \
+            --project-name usenet \
+            down \
+            --remove-orphans
+
+          Restart=always
+          RestartSec=60s
+          TimeoutSec=3600

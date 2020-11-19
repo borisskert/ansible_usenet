@@ -55,3 +55,13 @@
     group: root
     mode: 0644
   notify: Restart usenet service
+
+- name: Create systemd unit file
+  template:
+    src: usenet.systemd.j2
+    dest: "/etc/systemd/system/{{ usenet_service_name }}.service"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Restart usenet service

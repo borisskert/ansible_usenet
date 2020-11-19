@@ -1,0 +1,38 @@
+[Install]
+WantedBy=multi-user.target
+
+[Unit]
+Description={{ usenet_service_name }} service
+After=docker.service
+Requires=docker.service
+
+[Service]
+ExecStartPre=-{{ docker_compose_executable }} \
+  --project-directory {{ usenet_docker_working_directory }} \
+  --file {{ usenet_docker_compose_path }} \
+  --project-name {{ usenet_service_name }} \
+  down \
+  --remove-orphans
+
+ExecStartPre={{ docker_compose_executable }} \
+  --project-directory {{ usenet_docker_working_directory }} \
+  --file {{ usenet_docker_compose_path }} \
+  --project-name {{ usenet_service_name }} \
+  pull
+
+ExecStart={{ docker_compose_executable }} \
+  --project-directory {{ usenet_docker_working_directory }} \
+  --file {{ usenet_docker_compose_path }} \
+  --project-name {{ usenet_service_name }} \
+  up
+
+ExecStop={{ docker_compose_executable }} \
+  --project-directory {{ usenet_docker_working_directory }} \
+  --file {{ usenet_docker_compose_path }} \
+  --project-name {{ usenet_service_name }} \
+  down \
+  --remove-orphans
+
+Restart=always
+RestartSec=60s
+TimeoutSec=3600

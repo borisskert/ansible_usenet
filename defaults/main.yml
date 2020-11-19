@@ -1,7 +1,7 @@
 ---
 usenet_service_name: usenet
 
-usenet_docker_working_directory: /opt/usenext/docker
+usenet_docker_working_directory: /opt/usenet/docker
 usenet_docker_compose_path: "{{ usenet_docker_working_directory }}/docker-compose.yml"
 
 usenet_sabnzbd_volume_directory: /srv/usenet/sabnzbd
@@ -21,3 +21,5 @@ usenet_sonarr_network_port: 8989
 
 usenet_user_id: 666
 usenet_group_id: 666
+
+docker_compose_executable: /usr/local/bin/docker-compose

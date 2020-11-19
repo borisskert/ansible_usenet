@@ -1,6 +1,9 @@
 ---
 usenet_service_name: usenet
 
+usenet_sabnzbd_version: latest
+usenet_sonarr_version: latest
+
 usenet_docker_working_directory: /opt/usenet/docker
 usenet_docker_compose_path: "{{ usenet_docker_working_directory }}/docker-compose.yml"
 

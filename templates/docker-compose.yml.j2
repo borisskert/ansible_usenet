@@ -2,7 +2,7 @@
 version: "3.2"
 services:
   sabnzbd:
-    image: ghcr.io/linuxserver/sabnzbd
+    image: ghcr.io/linuxserver/sabnzbd:{{ usenet_sabnzbd_version }}
     container_name: sabnzbd
     environment:
       - PUID={{ usenet_user_id }}
@@ -18,7 +18,7 @@ services:
     restart: unless-stopped
 
   sonarr:
-    image: ghcr.io/linuxserver/sonarr
+    image: ghcr.io/linuxserver/sonarr:{{ usenet_sonarr_version }}
     container_name: sonarr
     environment:
       - PUID={{ usenet_user_id }}

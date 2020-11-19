@@ -4,4 +4,6 @@
   become: true
 
   roles:
-    - ansible_usenet
+    - role: ansible_usenet
+      usenet_sabnzbd_network_port: 18080
+      usenet_sonarr_network_port: 18989

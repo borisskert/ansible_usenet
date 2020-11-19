@@ -13,7 +13,7 @@
       vars:
         expected_content: |
           ---
-          version: 3.2
+          version: "3.2"
           services:
             sabnzbd:
               image: sabnzbd/sabnzbd
@@ -22,7 +22,7 @@
                 - /srv/usenet/sabnzbd/datadir:/datadir
                 - /srv/usenet/sabnzbd/media:/media
               ports:
-                - 0.0.0.0:8080:8080
+                - 0.0.0.0:18080:8080
               environment:
                 - SABNZBD_UID=666
                 - SABNZBD_GID=666
@@ -43,7 +43,7 @@
                 - /srv/usenet/sonarr/tv:/tv
                 - /srv/usenet/sonarr/downloads:/downloads
               ports:
-                - 0.0.0.0:8989:8989
+                - 0.0.0.0:18989:8989
               restart: unless-stopped
 
     - name: Should create sabnzbd datadir volume
@@ -147,3 +147,29 @@
           Restart=always
           RestartSec=60s
           TimeoutSec=3600
+
+    - name: Should open 18080/tcp port
+      command: nc -z -w1 localhost 18080
+      changed_when: false
+      register: netcat_18080
+      retries: 300
+      delay: 1
+      until: netcat_18080 is defined
+        and netcat_18080.rc == 0
+      when: not (
+        molecule_docker_environment is defined
+        and molecule_docker_environment | bool
+        )
+
+    - name: Should open 18989/tcp port
+      command: nc -z -w1 localhost 18989
+      changed_when: false
+      register: netcat_18989
+      retries: 300
+      delay: 1
+      until: netcat_18989 is defined
+        and netcat_18989.rc == 0
+      when: not (
+        molecule_docker_environment is defined
+        and molecule_docker_environment | bool
+        )

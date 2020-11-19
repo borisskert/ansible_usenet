@@ -7,6 +7,46 @@
     group: root
     mode: 0755
 
+- name: create sabnzbd datadir volume directory
+  file:
+    path: "{{ usenet_sabnzbd_data_volume_directory }}"
+    state: directory
+    owner: "{{ usenet_user_id | int }}"
+    group: "{{ usenet_group_id | int }}"
+    mode: 0750
+
+- name: create sabnzbd media volume directory
+  file:
+    path: "{{ usenet_sabnzbd_media_volume_directory }}"
+    state: directory
+    owner: "{{ usenet_user_id | int }}"
+    group: "{{ usenet_group_id | int }}"
+    mode: 0750
+
+- name: create sonarr config volume directory
+  file:
+    path: "{{ usenet_sonarr_config_volume_directory }}"
+    state: directory
+    owner: "{{ usenet_user_id | int }}"
+    group: "{{ usenet_group_id | int }}"
+    mode: 0750
+
+- name: create sonarr tv volume directory
+  file:
+    path: "{{ usenet_sonarr_tv_volume_directory }}"
+    state: directory
+    owner: "{{ usenet_user_id | int }}"
+    group: "{{ usenet_group_id | int }}"
+    mode: 0750
+
+- name: create sonarr downloads volume directory
+  file:
+    path: "{{ usenet_sonarr_downloads_volume_directory }}"
+    state: directory
+    owner: "{{ usenet_user_id | int }}"
+    group: "{{ usenet_group_id | int }}"
+    mode: 0750
+
 - name: template docker-compose file
   template:
     src: docker-compose.yml.j2

@@ -45,3 +45,58 @@
               ports:
                 - 0.0.0.0:8989:8989
               restart: unless-stopped
+
+    - name: Should create sabnzbd datadir volume
+      stat:
+        path: /srv/usenet/sabnzbd/datadir
+      register: sabnzbd_datadir_volume_directory
+      failed_when: not (
+        sabnzbd_datadir_volume_directory.stat.exists
+        and sabnzbd_datadir_volume_directory.stat.uid == 666
+        and sabnzbd_datadir_volume_directory.stat.gid == 666
+        and sabnzbd_datadir_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create sabnzbd media volume
+      stat:
+        path: /srv/usenet/sabnzbd/media
+      register: sabnzbd_media_volume_directory
+      failed_when: not (
+        sabnzbd_media_volume_directory.stat.exists
+        and sabnzbd_media_volume_directory.stat.uid == 666
+        and sabnzbd_media_volume_directory.stat.gid == 666
+        and sabnzbd_media_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create sonarr config volume
+      stat:
+        path: /srv/usenet/sonarr/config
+      register: sonarr_config_volume_directory
+      failed_when: not (
+        sonarr_config_volume_directory.stat.exists
+        and sonarr_config_volume_directory.stat.uid == 666
+        and sonarr_config_volume_directory.stat.gid == 666
+        and sonarr_config_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create sonarr tv volume
+      stat:
+        path: /srv/usenet/sonarr/tv
+      register: sonarr_tv_volume_directory
+      failed_when: not (
+        sonarr_tv_volume_directory.stat.exists
+        and sonarr_tv_volume_directory.stat.uid == 666
+        and sonarr_tv_volume_directory.stat.gid == 666
+        and sonarr_tv_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create sonarr downloads volume
+      stat:
+        path: /srv/usenet/sonarr/downloads
+      register: sonarr_downloads_volume_directory
+      failed_when: not (
+        sonarr_downloads_volume_directory.stat.exists
+        and sonarr_downloads_volume_directory.stat.uid == 666
+        and sonarr_downloads_volume_directory.stat.gid == 666
+        and sonarr_downloads_volume_directory.stat.mode == '0750'
+        )

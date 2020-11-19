@@ -16,16 +16,19 @@
           version: "3.2"
           services:
             sabnzbd:
-              image: sabnzbd/sabnzbd
+              image: ghcr.io/linuxserver/sabnzbd
               container_name: sabnzbd
+              environment:
+                - PUID=666
+                - PGID=666
+                - TZ=Europe/London
               volumes:
-                - /srv/usenet/sabnzbd/datadir:/datadir
-                - /srv/usenet/sabnzbd/media:/media
+                - /srv/usenet/sabnzbd/config:/config
+                - /srv/usenet/sabnzbd/downloads:/downloads
+                - /srv/usenet/sabnzbd/incomplete-downloads:/incomplete-downloads
               ports:
                 - 0.0.0.0:18080:8080
-              environment:
-                - SABNZBD_UID=666
-                - SABNZBD_GID=666
+                - 0.0.0.0:19090:9090
               restart: unless-stopped
 
             sonarr:
@@ -46,26 +49,37 @@
                 - 0.0.0.0:18989:8989
               restart: unless-stopped
 
-    - name: Should create sabnzbd datadir volume
+    - name: Should create sabnzbd config volume
       stat:
-        path: /srv/usenet/sabnzbd/datadir
-      register: sabnzbd_datadir_volume_directory
+        path: /srv/usenet/sabnzbd/config
+      register: sabnzbd_config_volume_directory
       failed_when: not (
-        sabnzbd_datadir_volume_directory.stat.exists
-        and sabnzbd_datadir_volume_directory.stat.uid == 666
-        and sabnzbd_datadir_volume_directory.stat.gid == 666
-        and sabnzbd_datadir_volume_directory.stat.mode == '0750'
+        sabnzbd_config_volume_directory.stat.exists
+        and sabnzbd_config_volume_directory.stat.uid == 666
+        and sabnzbd_config_volume_directory.stat.gid == 666
+        and sabnzbd_config_volume_directory.stat.mode == '0750'
         )
 
-    - name: Should create sabnzbd media volume
+    - name: Should create sabnzbd downloads volume
       stat:
-        path: /srv/usenet/sabnzbd/media
-      register: sabnzbd_media_volume_directory
+        path: /srv/usenet/sabnzbd/downloads
+      register: sabnzbd_downloads_volume_directory
       failed_when: not (
-        sabnzbd_media_volume_directory.stat.exists
-        and sabnzbd_media_volume_directory.stat.uid == 666
-        and sabnzbd_media_volume_directory.stat.gid == 666
-        and sabnzbd_media_volume_directory.stat.mode == '0750'
+        sabnzbd_downloads_volume_directory.stat.exists
+        and sabnzbd_downloads_volume_directory.stat.uid == 666
+        and sabnzbd_downloads_volume_directory.stat.gid == 666
+        and sabnzbd_downloads_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create sabnzbd incomplete downloads volume
+      stat:
+        path: /srv/usenet/sabnzbd/downloads
+      register: sabnzbd_incomplete_downloads_volume_directory
+      failed_when: not (
+        sabnzbd_incomplete_downloads_volume_directory.stat.exists
+        and sabnzbd_incomplete_downloads_volume_directory.stat.uid == 666
+        and sabnzbd_incomplete_downloads_volume_directory.stat.gid == 666
+        and sabnzbd_incomplete_downloads_volume_directory.stat.mode == '0750'
         )
 
     - name: Should create sonarr config volume

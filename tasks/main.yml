@@ -7,17 +7,24 @@
     group: root
     mode: 0755
 
-- name: create sabnzbd datadir volume directory
+- name: create sabnzbd config volume directory
   file:
-    path: "{{ usenet_sabnzbd_data_volume_directory }}"
+    path: "{{ usenet_sabnzbd_config_volume_directory }}"
     state: directory
     owner: "{{ usenet_user_id | int }}"
     group: "{{ usenet_group_id | int }}"
     mode: 0750
 
-- name: create sabnzbd media volume directory
+- name: create sabnzbd downloads volume directory
   file:
-    path: "{{ usenet_sabnzbd_media_volume_directory }}"
+    path: "{{ usenet_sabnzbd_downloads_volume_directory }}"
+    state: directory
+    owner: "{{ usenet_user_id | int }}"
+    group: "{{ usenet_group_id | int }}"
+    mode: 0750
+- name: create sabnzbd incomplete downloads volume directory
+  file:
+    path: "{{ usenet_sabnzbd_incomplete_downloads_volume_directory }}"
     state: directory
     owner: "{{ usenet_user_id | int }}"
     group: "{{ usenet_group_id | int }}"

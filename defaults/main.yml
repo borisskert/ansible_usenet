@@ -5,8 +5,9 @@ usenet_docker_working_directory: /opt/usenet/docker
 usenet_docker_compose_path: "{{ usenet_docker_working_directory }}/docker-compose.yml"
 
 usenet_sabnzbd_volume_directory: /srv/usenet/sabnzbd
-usenet_sabnzbd_data_volume_directory: '{{ usenet_sabnzbd_volume_directory }}/datadir'
-usenet_sabnzbd_media_volume_directory: '{{ usenet_sabnzbd_volume_directory }}/media'
+usenet_sabnzbd_config_volume_directory: "{{ usenet_sabnzbd_volume_directory }}/config"
+usenet_sabnzbd_downloads_volume_directory: "{{ usenet_sabnzbd_volume_directory }}/downloads"
+usenet_sabnzbd_incomplete_downloads_volume_directory: "{{ usenet_sabnzbd_volume_directory }}/incomplete-downloads"
 
 usenet_sonarr_volume_directory: /srv/usenet/sonarr
 usenet_sonarr_config_volume_directory: "{{ usenet_sonarr_volume_directory }}/config"
@@ -14,10 +15,11 @@ usenet_sonarr_tv_volume_directory: "{{ usenet_sonarr_volume_directory }}/tv"
 usenet_sonarr_downloads_volume_directory: "{{ usenet_sonarr_volume_directory }}/downloads"
 
 usenet_sabnzbd_network_interface: 0.0.0.0
-usenet_sabnzbd_network_port: 8080
+usenet_sabnzbd_http_port: 8080
+usenet_sabnzbd_https_port: 8080
 
 usenet_sonarr_network_interface: 0.0.0.0
-usenet_sonarr_network_port: 8989
+usenet_sonarr_http_port: 8989
 
 usenet_user_id: 666
 usenet_group_id: 666

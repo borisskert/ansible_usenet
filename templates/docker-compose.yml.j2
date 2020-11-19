@@ -2,16 +2,19 @@
 version: "3.2"
 services:
   sabnzbd:
-    image: sabnzbd/sabnzbd
+    image: ghcr.io/linuxserver/sabnzbd
     container_name: sabnzbd
-    volumes:
-      - {{ usenet_sabnzbd_data_volume_directory }}:/datadir
-      - {{ usenet_sabnzbd_media_volume_directory }}:/media
-    ports:
-      - {{ usenet_sabnzbd_network_interface }}:{{ usenet_sabnzbd_network_port }}:8080
     environment:
-      - SABNZBD_UID={{ usenet_user_id }}
-      - SABNZBD_GID={{ usenet_group_id }}
+      - PUID={{ usenet_user_id }}
+      - PGID={{ usenet_group_id }}
+      - TZ=Europe/London
+    volumes:
+      - {{ usenet_sabnzbd_config_volume_directory }}:/config
+      - {{ usenet_sabnzbd_downloads_volume_directory }}:/downloads
+      - {{ usenet_sabnzbd_incomplete_downloads_volume_directory }}:/incomplete-downloads
+    ports:
+      - {{ usenet_sabnzbd_network_interface }}:{{ usenet_sabnzbd_http_port }}:8080
+      - {{ usenet_sabnzbd_network_interface }}:{{ usenet_sabnzbd_https_port }}:9090
     restart: unless-stopped
 
   sonarr:
@@ -29,5 +32,5 @@ services:
       - {{ usenet_sonarr_tv_volume_directory }}:/tv
       - {{ usenet_sonarr_downloads_volume_directory }}:/downloads
     ports:
-      - {{ usenet_sonarr_network_interface }}:{{ usenet_sonarr_network_port }}:8989
+      - {{ usenet_sonarr_network_interface }}:{{ usenet_sonarr_http_port }}:8989
     restart: unless-stopped

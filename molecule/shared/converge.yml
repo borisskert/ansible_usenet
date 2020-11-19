@@ -1,7 +1,7 @@
 ---
 - name: Converge
   hosts: all
-  tasks:
-    - name: "Include ansible_usenet"
-      include_role:
-        name: "ansible_usenet"
+  become: true
+
+  roles:
+    - ansible_usenet

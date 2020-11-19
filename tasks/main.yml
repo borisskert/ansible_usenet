@@ -1,2 +1,17 @@
 ---
-# tasks file for ansible_usenet
+- name: create docker working directory
+  file:
+    path: "{{ usenet_docker_working_directory }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: template docker-compose file
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ usenet_docker_compose_path }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart usenet service

@@ -1,0 +1,33 @@
+---
+version: 3.2
+services:
+  sabnzbd:
+    image: sabnzbd/sabnzbd
+    container_name: sabnzbd
+    volumes:
+      - {{ usenet_sabnzbd_data_volume_directory }}:/datadir
+      - {{ usenet_sabnzbd_media_volume_directory }}:/media
+    ports:
+      - {{ usenet_sabnzbd_network_interface }}:{{ usenet_sabnzbd_network_port }}:8080
+    environment:
+      - SABNZBD_UID={{ usenet_user_id }}
+      - SABNZBD_GID={{ usenet_group_id }}
+    restart: unless-stopped
+
+  sonarr:
+    image: ghcr.io/linuxserver/sonarr
+    container_name: sonarr
+    environment:
+      - PUID={{ usenet_user_id }}
+      - PGID={{ usenet_group_id }}
+      - TZ=Europe/London
+      - UMASK_SET=022
+    depends_on:
+      - sabnzbd
+    volumes:
+      - {{ usenet_sonarr_config_volume_directory }}:/config
+      - {{ usenet_sonarr_tv_volume_directory }}:/tv
+      - {{ usenet_sonarr_downloads_volume_directory }}:/downloads
+    ports:
+      - {{ usenet_sonarr_network_interface }}:{{ usenet_sonarr_network_port }}:8989
+    restart: unless-stopped

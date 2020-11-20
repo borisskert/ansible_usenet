@@ -54,6 +54,30 @@
     group: "{{ usenet_group_id | int }}"
     mode: 0750
 
+- name: create plex config volume directory
+  file:
+    path: "{{ usenet_plex_config_volume_directory }}"
+    state: directory
+    owner: "{{ usenet_user_id | int }}"
+    group: "{{ usenet_group_id | int }}"
+    mode: 0750
+
+- name: create plex tv volume directory
+  file:
+    path: "{{ usenet_plex_tv_volume_directory }}"
+    state: directory
+    owner: "{{ usenet_user_id | int }}"
+    group: "{{ usenet_group_id | int }}"
+    mode: 0750
+
+- name: create plex movies volume directory
+  file:
+    path: "{{ usenet_plex_movies_volume_directory }}"
+    state: directory
+    owner: "{{ usenet_user_id | int }}"
+    group: "{{ usenet_group_id | int }}"
+    mode: 0750
+
 - name: template docker-compose file
   template:
     src: docker-compose.yml.j2

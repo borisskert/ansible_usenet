@@ -48,6 +48,22 @@
               ports:
                 - 0.0.0.0:18989:8989
               restart: unless-stopped
+            plex:
+              image: ghcr.io/linuxserver/plex:version-1.20.5.3600-47c0d9038
+              container_name: plex
+              network_mode: host
+              environment:
+                - PUID=666
+                - PGID=666
+                - VERSION=docker
+                - UMASK_SET=022
+              volumes:
+                - /srv/usenet/plex/config:/config
+                - /srv/usenet/plex/tv:/tv
+                - /srv/usenet/plex/movies:/movies
+              devices:
+                - /dev/dri:/dev/dri
+              restart: unless-stopped
 
     - name: Should create sabnzbd config volume
       stat:
@@ -113,6 +129,39 @@
         and sonarr_downloads_volume_directory.stat.uid == 666
         and sonarr_downloads_volume_directory.stat.gid == 666
         and sonarr_downloads_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create plex config volume
+      stat:
+        path: /srv/usenet/plex/config
+      register: plex_config_volume_directory
+      failed_when: not (
+        plex_config_volume_directory.stat.exists
+        and plex_config_volume_directory.stat.uid == 666
+        and plex_config_volume_directory.stat.gid == 666
+        and plex_config_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create plex tv volume
+      stat:
+        path: /srv/usenet/plex/tv
+      register: plex_tv_volume_directory
+      failed_when: not (
+        plex_tv_volume_directory.stat.exists
+        and plex_tv_volume_directory.stat.uid == 666
+        and plex_tv_volume_directory.stat.gid == 666
+        and plex_tv_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create plex movies volume
+      stat:
+        path: /srv/usenet/plex/movies
+      register: plex_movies_volume_directory
+      failed_when: not (
+        plex_movies_volume_directory.stat.exists
+        and plex_movies_volume_directory.stat.uid == 666
+        and plex_movies_volume_directory.stat.gid == 666
+        and plex_movies_volume_directory.stat.mode == '0750'
         )
 
     - name: Should usenet systemd unit file
@@ -183,6 +232,19 @@
       delay: 1
       until: netcat_18989 is defined
         and netcat_18989.rc == 0
+      when: not (
+        molecule_docker_environment is defined
+        and molecule_docker_environment | bool
+        )
+
+    - name: Should open 32400/tcp port
+      command: nc -z -w1 localhost 32400
+      changed_when: false
+      register: netcat_32400
+      retries: 300
+      delay: 1
+      until: netcat_32400 is defined
+        and netcat_32400.rc == 0
       when: not (
         molecule_docker_environment is defined
         and molecule_docker_environment | bool

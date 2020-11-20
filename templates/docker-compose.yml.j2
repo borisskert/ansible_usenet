@@ -34,3 +34,21 @@ services:
     ports:
       - {{ usenet_sonarr_network_interface }}:{{ usenet_sonarr_http_port }}:8989
     restart: unless-stopped
+  plex:
+    image: ghcr.io/linuxserver/plex:{{ usenet_plex_version }}
+    container_name: plex
+    network_mode: host
+    environment:
+      - PUID={{ usenet_user_id }}
+      - PGID={{ usenet_group_id }}
+      - VERSION=docker
+      - UMASK_SET=022
+    volumes:
+      - {{ usenet_plex_config_volume_directory }}:/config
+      - {{ usenet_plex_tv_volume_directory }}:/tv
+      - {{ usenet_plex_movies_volume_directory }}:/movies
+{% if usenet_plex_intel_hardware_acceleration | bool %}
+    devices:
+      - /dev/dri:/dev/dri
+{% endif %}
+    restart: unless-stopped

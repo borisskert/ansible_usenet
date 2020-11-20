@@ -7,6 +7,8 @@
     - role: ansible_usenet
       usenet_sabnzbd_version: version-3.1.1
       usenet_sonarr_version: version-2.0.0.5344
+      usenet_plex_version: version-1.20.5.3600-47c0d9038
       usenet_sabnzbd_http_port: 18080
       usenet_sabnzbd_https_port: 19090
       usenet_sonarr_http_port: 18989
+      usenet_plex_intel_hardware_acceleration: true

@@ -8,6 +8,7 @@ services:
       - PUID={{ usenet_user_id }}
       - PGID={{ usenet_group_id }}
       - TZ=Europe/London
+      - UMASK_SET=022
     volumes:
       - {{ usenet_sabnzbd_config_volume_directory }}:/config
       - {{ usenet_sabnzbd_downloads_volume_directory }}:/downloads
@@ -33,4 +34,20 @@ services:
       - {{ usenet_sonarr_downloads_volume_directory }}:/downloads
     ports:
       - {{ usenet_sonarr_network_interface }}:{{ usenet_sonarr_http_port }}:8989
+    restart: unless-stopped
+
+  radarr:
+    image: ghcr.io/linuxserver/radarr:{{ usenet_radarr_version }}
+    container_name: radarr
+    environment:
+      - PUID={{ usenet_user_id }}
+      - PGID={{ usenet_user_id }}
+      - TZ=Europe/London
+      - UMASK_SET=022
+    volumes:
+      - {{ usenet_radarr_config_volume_directory }}:/config
+      - {{ usenet_radarr_movies_volume_directory }}:/movies
+      - {{ usenet_radarr_downloads_volume_directory }}:/downloads
+    ports:
+      - {{ usenet_radarr_network_interface }}:{{ usenet_radarr_http_port }}:7878
     restart: unless-stopped

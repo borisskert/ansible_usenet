@@ -22,6 +22,7 @@
                 - PUID=777
                 - PGID=777
                 - TZ=Europe/London
+                - UMASK_SET=022
               volumes:
                 - /srv/my_usenet/sabnzbd/config:/config
                 - /srv/my_usenet/sabnzbd/downloads:/downloads
@@ -47,6 +48,22 @@
                 - /srv/my_usenet/sonarr/downloads:/downloads
               ports:
                 - 127.0.0.1:18989:8989
+              restart: unless-stopped
+
+            radarr:
+              image: ghcr.io/linuxserver/radarr:version-3.0.0.4127
+              container_name: radarr
+              environment:
+                - PUID=777
+                - PGID=777
+                - TZ=Europe/London
+                - UMASK_SET=022
+              volumes:
+                - /srv/my_usenet/radarr/config:/config
+                - /srv/my_usenet/radarr/movies:/movies
+                - /srv/my_usenet/radarr/downloads:/downloads
+              ports:
+                - 127.0.0.1:17878:7878
               restart: unless-stopped
 
     - name: Should create sabnzbd config volume
@@ -113,6 +130,39 @@
         and sonarr_downloads_volume_directory.stat.uid == 777
         and sonarr_downloads_volume_directory.stat.gid == 777
         and sonarr_downloads_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create radarr config volume
+      stat:
+        path: /srv/my_usenet/radarr/config
+      register: radarr_config_volume_directory
+      failed_when: not (
+        radarr_config_volume_directory.stat.exists
+        and radarr_config_volume_directory.stat.uid == 777
+        and radarr_config_volume_directory.stat.gid == 777
+        and radarr_config_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create radarr movies volume
+      stat:
+        path: /srv/my_usenet/radarr/movies
+      register: radarr_movies_volume_directory
+      failed_when: not (
+        radarr_movies_volume_directory.stat.exists
+        and radarr_movies_volume_directory.stat.uid == 777
+        and radarr_movies_volume_directory.stat.gid == 777
+        and radarr_movies_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create radarr downloads volume
+      stat:
+        path: /srv/my_usenet/radarr/downloads
+      register: radarr_downloads_volume_directory
+      failed_when: not (
+        radarr_downloads_volume_directory.stat.exists
+        and radarr_downloads_volume_directory.stat.uid == 777
+        and radarr_downloads_volume_directory.stat.gid == 777
+        and radarr_downloads_volume_directory.stat.mode == '0750'
         )
 
     - name: Should usenet systemd unit file
@@ -183,6 +233,19 @@
       delay: 1
       until: netcat_18989 is defined
         and netcat_18989.rc == 0
+      when: not (
+        molecule_docker_environment is defined
+        and molecule_docker_environment | bool
+        )
+
+    - name: Should open 17878/tcp port
+      command: nc -z -w1 localhost 17878
+      changed_when: false
+      register: netcat_17878
+      retries: 300
+      delay: 1
+      until: netcat_17878 is defined
+        and netcat_17878.rc == 0
       when: not (
         molecule_docker_environment is defined
         and molecule_docker_environment | bool

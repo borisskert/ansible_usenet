@@ -1,0 +1,189 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Should template docker-compose file
+      slurp:
+        src: /opt/usenet/docker/docker-compose.yml
+      register: docker_compose_file
+      failed_when:
+        not docker_compose_file.content == ( expected_content | b64encode )
+      vars:
+        expected_content: |
+          ---
+          version: "3.2"
+          services:
+            sabnzbd:
+              image: ghcr.io/linuxserver/sabnzbd:version-3.1.1
+              container_name: sabnzbd
+              environment:
+                - PUID=777
+                - PGID=777
+                - TZ=Europe/London
+              volumes:
+                - /srv/my_usenet/sabnzbd/config:/config
+                - /srv/my_usenet/sabnzbd/downloads:/downloads
+                - /srv/my_usenet/sabnzbd/incomplete-downloads:/incomplete-downloads
+              ports:
+                - 127.0.0.1:18080:8080
+                - 127.0.0.1:19090:9090
+              restart: unless-stopped
+
+            sonarr:
+              image: ghcr.io/linuxserver/sonarr:version-2.0.0.5344
+              container_name: sonarr
+              environment:
+                - PUID=777
+                - PGID=777
+                - TZ=Europe/London
+                - UMASK_SET=022
+              depends_on:
+                - sabnzbd
+              volumes:
+                - /srv/my_usenet/sonarr/config:/config
+                - /srv/my_usenet/sonarr/tv:/tv
+                - /srv/my_usenet/sonarr/downloads:/downloads
+              ports:
+                - 127.0.0.1:18989:8989
+              restart: unless-stopped
+
+    - name: Should create sabnzbd config volume
+      stat:
+        path: /srv/my_usenet/sabnzbd/config
+      register: sabnzbd_config_volume_directory
+      failed_when: not (
+        sabnzbd_config_volume_directory.stat.exists
+        and sabnzbd_config_volume_directory.stat.uid == 777
+        and sabnzbd_config_volume_directory.stat.gid == 777
+        and sabnzbd_config_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create sabnzbd downloads volume
+      stat:
+        path: /srv/my_usenet/sabnzbd/downloads
+      register: sabnzbd_downloads_volume_directory
+      failed_when: not (
+        sabnzbd_downloads_volume_directory.stat.exists
+        and sabnzbd_downloads_volume_directory.stat.uid == 777
+        and sabnzbd_downloads_volume_directory.stat.gid == 777
+        and sabnzbd_downloads_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create sabnzbd incomplete downloads volume
+      stat:
+        path: /srv/my_usenet/sabnzbd/downloads
+      register: sabnzbd_incomplete_downloads_volume_directory
+      failed_when: not (
+        sabnzbd_incomplete_downloads_volume_directory.stat.exists
+        and sabnzbd_incomplete_downloads_volume_directory.stat.uid == 777
+        and sabnzbd_incomplete_downloads_volume_directory.stat.gid == 777
+        and sabnzbd_incomplete_downloads_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create sonarr config volume
+      stat:
+        path: /srv/my_usenet/sonarr/config
+      register: sonarr_config_volume_directory
+      failed_when: not (
+        sonarr_config_volume_directory.stat.exists
+        and sonarr_config_volume_directory.stat.uid == 777
+        and sonarr_config_volume_directory.stat.gid == 777
+        and sonarr_config_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create sonarr tv volume
+      stat:
+        path: /srv/my_usenet/sonarr/tv
+      register: sonarr_tv_volume_directory
+      failed_when: not (
+        sonarr_tv_volume_directory.stat.exists
+        and sonarr_tv_volume_directory.stat.uid == 777
+        and sonarr_tv_volume_directory.stat.gid == 777
+        and sonarr_tv_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create sonarr downloads volume
+      stat:
+        path: /srv/my_usenet/sonarr/downloads
+      register: sonarr_downloads_volume_directory
+      failed_when: not (
+        sonarr_downloads_volume_directory.stat.exists
+        and sonarr_downloads_volume_directory.stat.uid == 777
+        and sonarr_downloads_volume_directory.stat.gid == 777
+        and sonarr_downloads_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should usenet systemd unit file
+      slurp:
+        src: /etc/systemd/system/usenet.service
+      register: usenet_service_file
+      failed_when:
+        not usenet_service_file.content == ( expected_content | b64encode )
+      vars:
+        expected_content: |
+          [Install]
+          WantedBy=multi-user.target
+
+          [Unit]
+          Description=usenet service
+          After=docker.service
+          Requires=docker.service
+
+          [Service]
+          ExecStartPre=-/usr/local/bin/docker-compose \
+            --project-directory /opt/usenet/docker \
+            --file /opt/usenet/docker/docker-compose.yml \
+            --project-name usenet \
+            down \
+            --remove-orphans
+
+          ExecStartPre=/usr/local/bin/docker-compose \
+            --project-directory /opt/usenet/docker \
+            --file /opt/usenet/docker/docker-compose.yml \
+            --project-name usenet \
+            pull
+
+          ExecStart=/usr/local/bin/docker-compose \
+            --project-directory /opt/usenet/docker \
+            --file /opt/usenet/docker/docker-compose.yml \
+            --project-name usenet \
+            up
+
+          ExecStop=/usr/local/bin/docker-compose \
+            --project-directory /opt/usenet/docker \
+            --file /opt/usenet/docker/docker-compose.yml \
+            --project-name usenet \
+            down \
+            --remove-orphans
+
+          Restart=always
+          RestartSec=60s
+          TimeoutSec=3600
+
+    - name: Should open 18080/tcp port
+      command: nc -z -w1 localhost 18080
+      changed_when: false
+      register: netcat_18080
+      retries: 300
+      delay: 1
+      until: netcat_18080 is defined
+        and netcat_18080.rc == 0
+      when: not (
+        molecule_docker_environment is defined
+        and molecule_docker_environment | bool
+        )
+
+    - name: Should open 18989/tcp port
+      command: nc -z -w1 localhost 18989
+      changed_when: false
+      register: netcat_18989
+      retries: 300
+      delay: 1
+      until: netcat_18989 is defined
+        and netcat_18989.rc == 0
+      when: not (
+        molecule_docker_environment is defined
+        and molecule_docker_environment | bool
+        )

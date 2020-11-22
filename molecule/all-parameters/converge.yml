@@ -1,0 +1,22 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  roles:
+    - role: ansible_usenet
+      usenet_sabnzbd_version: version-3.1.1
+      usenet_sonarr_version: version-2.0.0.5344
+      usenet_sabnzbd_http_port: 18080
+      usenet_sabnzbd_https_port: 19090
+      usenet_sonarr_http_port: 18989
+      usenet_sabnzbd_network_interface: 127.0.0.1
+      usenet_sonarr_network_interface: 127.0.0.1
+      usenet_sabnzbd_config_volume_directory: /srv/my_usenet/sabnzbd/config
+      usenet_sabnzbd_downloads_volume_directory: /srv/my_usenet/sabnzbd/downloads
+      usenet_sabnzbd_incomplete_downloads_volume_directory: /srv/my_usenet/sabnzbd/incomplete-downloads
+      usenet_sonarr_config_volume_directory: /srv/my_usenet/sonarr/config
+      usenet_sonarr_tv_volume_directory: /srv/my_usenet/sonarr/tv
+      usenet_sonarr_downloads_volume_directory: /srv/my_usenet/sonarr/downloads
+      usenet_user_id: 777
+      usenet_group_id: 777

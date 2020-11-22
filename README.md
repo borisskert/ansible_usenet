@@ -86,13 +86,13 @@ Requirements:
 ### Run within docker
 
 ```shell script
-molecule test --parallel
+molecule test --scenario-name docker-default && molecule test --scenario-name docker-all-parameters
 ```
 
 ### Run within Vagrant
 
 ```shell script
-molecule test --scenario-name vagrant
+molecule test --scenario-name vagrant-default && molecule test --scenario-name vagrant-all-parameters
 ```
 
 I recommend to use [pyenv](https://github.com/pyenv/pyenv) for local testing.

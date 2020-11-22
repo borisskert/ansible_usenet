@@ -1,0 +1,29 @@
+---
+name: Run tests
+
+'on':
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  molecule_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          path: "${{ github.repository }}"
+
+      - name: Run default tests
+        uses: borisskert/molecule-action@v20.11.09
+        with:
+          arguments: test --scenario-name docker-default
+
+      - name: Run tests with all-parameters
+        uses: borisskert/molecule-action@v20.11.09
+        with:
+          arguments: test --scenario-name docker-all-parameters

@@ -16,7 +16,7 @@
           version: "3.2"
           services:
             sabnzbd:
-              image: ghcr.io/linuxserver/sabnzbd:version-3.1.1
+              image: ghcr.io/linuxserver/sabnzbd:latest
               container_name: sabnzbd
               environment:
                 - PUID=666
@@ -27,12 +27,12 @@
                 - /srv/usenet/sabnzbd/downloads:/downloads
                 - /srv/usenet/sabnzbd/incomplete-downloads:/incomplete-downloads
               ports:
-                - 0.0.0.0:18080:8080
-                - 0.0.0.0:19090:9090
+                - 0.0.0.0:8080:8080
+                - 0.0.0.0:9090:9090
               restart: unless-stopped
 
             sonarr:
-              image: ghcr.io/linuxserver/sonarr:version-2.0.0.5344
+              image: ghcr.io/linuxserver/sonarr:latest
               container_name: sonarr
               environment:
                 - PUID=666
@@ -46,7 +46,7 @@
                 - /srv/usenet/sonarr/tv:/tv
                 - /srv/usenet/sonarr/downloads:/downloads
               ports:
-                - 0.0.0.0:18989:8989
+                - 0.0.0.0:8989:8989
               restart: unless-stopped
 
     - name: Should create sabnzbd config volume
@@ -162,27 +162,27 @@
           RestartSec=60s
           TimeoutSec=3600
 
-    - name: Should open 18080/tcp port
-      command: nc -z -w1 localhost 18080
+    - name: Should open 8080/tcp port
+      command: nc -z -w1 localhost 8080
       changed_when: false
-      register: netcat_18080
+      register: netcat_8080
       retries: 300
       delay: 1
-      until: netcat_18080 is defined
-        and netcat_18080.rc == 0
+      until: netcat_8080 is defined
+        and netcat_8080.rc == 0
       when: not (
         molecule_docker_environment is defined
         and molecule_docker_environment | bool
         )
 
-    - name: Should open 18989/tcp port
-      command: nc -z -w1 localhost 18989
+    - name: Should open 8989/tcp port
+      command: nc -z -w1 localhost 8989
       changed_when: false
-      register: netcat_18989
+      register: netcat_8989
       retries: 300
       delay: 1
-      until: netcat_18989 is defined
-        and netcat_18989.rc == 0
+      until: netcat_8989 is defined
+        and netcat_8989.rc == 0
       when: not (
         molecule_docker_environment is defined
         and molecule_docker_environment | bool

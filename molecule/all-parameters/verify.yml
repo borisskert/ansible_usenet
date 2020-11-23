@@ -82,6 +82,20 @@
                 - 127.0.0.1:16767:6767
               restart: unless-stopped
 
+            nzbhydra2:
+              image: ghcr.io/linuxserver/nzbhydra2:version-v3.5.1
+              container_name: nzbhydra2
+              environment:
+                - PUID=777
+                - PGID=888
+                - TZ=Europe/London
+              volumes:
+                - /srv/my_usenet/nzbhydra2/config:/config
+                - /srv/my_usenet/nzbhydra2/downloads:/downloads
+              ports:
+                - 127.0.0.1:15076:5076
+              restart: unless-stopped
+
     - name: Should create sabnzbd config volume
       stat:
         path: /srv/my_usenet/sabnzbd/config
@@ -214,6 +228,28 @@
         and bazarr_movies_volume_directory.stat.mode == '0750'
         )
 
+    - name: Should create nzbhydra2 config volume
+      stat:
+        path: /srv/my_usenet/nzbhydra2/config
+      register: nzbhydra2_config_volume_directory
+      failed_when: not (
+        nzbhydra2_config_volume_directory.stat.exists
+        and nzbhydra2_config_volume_directory.stat.uid == 777
+        and nzbhydra2_config_volume_directory.stat.gid == 888
+        and nzbhydra2_config_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create nzbhydra2 downloads volume
+      stat:
+        path: /srv/my_usenet/nzbhydra2/downloads
+      register: nzbhydra2_downloads_volume_directory
+      failed_when: not (
+        nzbhydra2_downloads_volume_directory.stat.exists
+        and nzbhydra2_downloads_volume_directory.stat.uid == 777
+        and nzbhydra2_downloads_volume_directory.stat.gid == 888
+        and nzbhydra2_downloads_volume_directory.stat.mode == '0750'
+        )
+
     - name: Should usenet systemd unit file
       slurp:
         src: /etc/systemd/system/usenet.service
@@ -308,6 +344,19 @@
       delay: 1
       until: netcat_16767 is defined
         and netcat_16767.rc == 0
+      when: not (
+        molecule_docker_environment is defined
+        and molecule_docker_environment | bool
+        )
+
+    - name: Should open 15076/tcp port
+      command: nc -z -w1 localhost 15076
+      changed_when: false
+      register: netcat_15076
+      retries: 300
+      delay: 1
+      until: netcat_15076 is defined
+        and netcat_15076.rc == 0
       when: not (
         molecule_docker_environment is defined
         and molecule_docker_environment | bool

@@ -102,6 +102,22 @@
     group: "{{ usenet_group_id | int }}"
     mode: 0750
 
+- name: create nzbhydra2 config volume directory
+  file:
+    path: "{{ usenet_nzbhydra2_config_volume_directory }}"
+    state: directory
+    owner: "{{ usenet_user_id | int }}"
+    group: "{{ usenet_group_id | int }}"
+    mode: 0750
+
+- name: create nzbhydra2 downloads volume directory
+  file:
+    path: "{{ usenet_nzbhydra2_downloads_volume_directory }}"
+    state: directory
+    owner: "{{ usenet_user_id | int }}"
+    group: "{{ usenet_group_id | int }}"
+    mode: 0750
+
 - name: template docker-compose file
   template:
     src: docker-compose.yml.j2

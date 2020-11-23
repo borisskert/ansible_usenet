@@ -1,6 +1,6 @@
 # ansible-usenet
 
-Installs [`sabnzbd`](https://sabnzbd.org/), [`sonarr`](https://sonarr.tv/), [`radarr`](https://radarr.video/) and [`bazarr`](https://www.bazarr.media/) as docker containers managed by systemd.
+Installs [`sabnzbd`](https://sabnzbd.org/), [`sonarr`](https://sonarr.tv/), [`radarr`](https://radarr.video/), [`bazarr`](https://www.bazarr.media/) and [`nzbhydra2`](https://github.com/theotherp/nzbhydra2/) as docker containers managed by systemd.
 
 ## System requirements
 
@@ -27,6 +27,7 @@ Installs [`sabnzbd`](https://sabnzbd.org/), [`sonarr`](https://sonarr.tv/), [`ra
 | usenet_sonarr_version  | text | no | latest | sonarr's Docker image version |
 | usenet_radarr_version  | text | no | latest | radarr's Docker image version |
 | usenet_bazarr_version  | text | no | latest | bazarr's Docker image version |
+| usenet_nzbhydra2_version | text | no | latest | nzbhydra2's Docker image version |
 | usenet_docker_working_directory | absolute path | no | /opt/usenet/docker | Docker working directory |
 | usenet_sabnzbd_config_volume_directory | absolute path | no | /srv/usenet/sabnzbd/config | sabnzbd config volume directory |
 | usenet_sabnzbd_downloads_volume_directory | absolute path | no | /srv/usenet/sabnzbd/downloads | sabnzbd downloads volume directory |
@@ -40,6 +41,8 @@ Installs [`sabnzbd`](https://sabnzbd.org/), [`sonarr`](https://sonarr.tv/), [`ra
 | usenet_bazarr_config_volume_directory                | absolute path | no | /srv/usenet/bazarr/config    | bazarr config volume directory |
 | usenet_bazarr_tv_volume_directory                    | absolute path | no | /srv/usenet/bazarr/tv        | bazarr tv volume directory |
 | usenet_bazarr_movies_volume_directory                | absolute path | no | /srv/usenet/bazarr/movies    | bazarr movies volume directory |
+| usenet_nzbhydra2_config_volume_directory             | absolute path | no | /srv/usenet/nzbhydra2/movies | nzbhydra2 config volume directory |
+| usenet_nzbhydra2_downloads_volume_directory          | absolute path | no | /srv/usenet/nzbhydra2/downloads | nzbhydra2 downloads volume directory |
 | usenet_sabnzbd_network_interface                     | network address | no | 0.0.0.0 | Bound network interface for sabnzbd's web-interface |
 | usenet_sabnzbd_http_port                             | network port    | no | 8080    | Network port for sabnzbd's http web-interface |
 | usenet_sabnzbd_https_port                            | network port    | no | 9090    | Network port for sabnzbd's httpd web-interface |
@@ -49,6 +52,8 @@ Installs [`sabnzbd`](https://sabnzbd.org/), [`sonarr`](https://sonarr.tv/), [`ra
 | usenet_radarr_http_port                              | network port    | no | 7878    | Network port for radarr's http web-interface |
 | usenet_bazarr_network_interface                      | network address | no | 0.0.0.0 | Bound network interface for bazarr's web-interface |
 | usenet_bazarr_http_port                              | network port    | no | 6767    | Network port for bazarr's http web-interface |
+| usenet_nzbhydra2_network_interface                   | network address | no | 0.0.0.0 | Bound network interface for nzbhydra2's web-interface |
+| usenet_nzbhydra2_http_port                           | network port    | no | 5076    | Network port for nzbhydra2's http web-interface |
 | usenet_user_id                                       | user id         | no | 666     | User id the services are running with |
 | usenet_group_id                                      | group id        | no | 666     | Group id the services are running with |
 
@@ -72,6 +77,7 @@ Installs [`sabnzbd`](https://sabnzbd.org/), [`sonarr`](https://sonarr.tv/), [`ra
       usenet_sonarr_version: version-2.0.0.5344
       usenet_radarr_version: version-3.0.0.4127
       usenet_bazarr_version: version-v0.9.0.6
+      usenet_nzbhydra2_version: version-v3.5.1
       usenet_sabnzbd_network_interface: 0.0.0.0
       usenet_sabnzbd_http_port: 8080
       usenet_sabnzbd_https_port: 9090
@@ -81,6 +87,8 @@ Installs [`sabnzbd`](https://sabnzbd.org/), [`sonarr`](https://sonarr.tv/), [`ra
       usenet_radarr_http_port: 7878
       usenet_bazarr_network_interface: 0.0.0.0
       usenet_bazarr_http_port: 6767
+      usenet_nzbhydra2_network_interface: 0.0.0.0
+      usenet_nzbhydra2_http_port: 5076
       usenet_sabnzbd_config_volume_directory: /srv/usenet/sabnzbd/config
       usenet_sabnzbd_downloads_volume_directory: /srv/usenet/sabnzbd/downloads
       usenet_sabnzbd_incomplete_downloads_volume_directory: /srv/usenet/sabnzbd/incomplete-downloads
@@ -93,6 +101,8 @@ Installs [`sabnzbd`](https://sabnzbd.org/), [`sonarr`](https://sonarr.tv/), [`ra
       usenet_bazarr_config_volume_directory: /srv/usenet/bazarr/config
       usenet_bazarr_tv_volume_directory: /srv/usenet/bazarr/tv
       usenet_bazarr_movies_volume_directory: /srv/usenet/bazarr/movies
+      usenet_nzbhydra2_config_volume_directory: /srv/usenet/nzbhydra2/config
+      usenet_nzbhydra2_downloads_volume_directory: /srv/usenet/nzbhydra2/downloads
       usenet_user_id: 666
       usenet_group_id: 666
 ```
@@ -138,3 +148,4 @@ MIT
 * [sonarr @ Docker hub](https://hub.docker.com/r/linuxserver/sonarr)
 * [radarr @ Docker hub](https://hub.docker.com/r/linuxserver/radarr)
 * [bazarr @ Docker hub](https://hub.docker.com/r/linuxserver/bazarr)
+* [nzbhydra2 @ Docker hub](https://hub.docker.com/r/linuxserver/nzbhydra2)

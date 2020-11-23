@@ -67,3 +67,17 @@ services:
     ports:
       - {{ usenet_bazarr_network_interface }}:{{ usenet_bazarr_http_port }}:6767
     restart: unless-stopped
+
+  nzbhydra2:
+    image: ghcr.io/linuxserver/nzbhydra2:{{ usenet_nzbhydra2_version }}
+    container_name: nzbhydra2
+    environment:
+      - PUID={{ usenet_user_id }}
+      - PGID={{ usenet_group_id }}
+      - TZ=Europe/London
+    volumes:
+      - {{ usenet_nzbhydra2_config_volume_directory }}:/config
+      - {{ usenet_nzbhydra2_downloads_volume_directory }}:/downloads
+    ports:
+      - {{ usenet_nzbhydra2_network_interface }}:{{ usenet_nzbhydra2_http_port }}:5076
+    restart: unless-stopped

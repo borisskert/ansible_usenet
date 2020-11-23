@@ -31,4 +31,4 @@
       usenet_bazarr_tv_volume_directory: /srv/my_usenet/bazarr/tv
       usenet_bazarr_movies_volume_directory: /srv/my_usenet/bazarr/movies
       usenet_user_id: 777
-      usenet_group_id: 777
+      usenet_group_id: 888

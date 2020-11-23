@@ -20,7 +20,7 @@
               container_name: sabnzbd
               environment:
                 - PUID=777
-                - PGID=777
+                - PGID=888
                 - TZ=Europe/London
                 - UMASK_SET=022
               volumes:
@@ -37,7 +37,7 @@
               container_name: sonarr
               environment:
                 - PUID=777
-                - PGID=777
+                - PGID=888
                 - TZ=Europe/London
                 - UMASK_SET=022
               depends_on:
@@ -55,7 +55,7 @@
               container_name: radarr
               environment:
                 - PUID=777
-                - PGID=777
+                - PGID=888
                 - TZ=Europe/London
                 - UMASK_SET=022
               volumes:
@@ -71,7 +71,7 @@
               container_name: bazarr
               environment:
                 - PUID=777
-                - PGID=777
+                - PGID=888
                 - TZ=Europe/London
                 - UMASK_SET=022
               volumes:
@@ -89,7 +89,7 @@
       failed_when: not (
         sabnzbd_config_volume_directory.stat.exists
         and sabnzbd_config_volume_directory.stat.uid == 777
-        and sabnzbd_config_volume_directory.stat.gid == 777
+        and sabnzbd_config_volume_directory.stat.gid == 888
         and sabnzbd_config_volume_directory.stat.mode == '0750'
         )
 
@@ -100,7 +100,7 @@
       failed_when: not (
         sabnzbd_downloads_volume_directory.stat.exists
         and sabnzbd_downloads_volume_directory.stat.uid == 777
-        and sabnzbd_downloads_volume_directory.stat.gid == 777
+        and sabnzbd_downloads_volume_directory.stat.gid == 888
         and sabnzbd_downloads_volume_directory.stat.mode == '0750'
         )
 
@@ -111,7 +111,7 @@
       failed_when: not (
         sabnzbd_incomplete_downloads_volume_directory.stat.exists
         and sabnzbd_incomplete_downloads_volume_directory.stat.uid == 777
-        and sabnzbd_incomplete_downloads_volume_directory.stat.gid == 777
+        and sabnzbd_incomplete_downloads_volume_directory.stat.gid == 888
         and sabnzbd_incomplete_downloads_volume_directory.stat.mode == '0750'
         )
 
@@ -122,7 +122,7 @@
       failed_when: not (
         sonarr_config_volume_directory.stat.exists
         and sonarr_config_volume_directory.stat.uid == 777
-        and sonarr_config_volume_directory.stat.gid == 777
+        and sonarr_config_volume_directory.stat.gid == 888
         and sonarr_config_volume_directory.stat.mode == '0750'
         )
 
@@ -133,7 +133,7 @@
       failed_when: not (
         sonarr_tv_volume_directory.stat.exists
         and sonarr_tv_volume_directory.stat.uid == 777
-        and sonarr_tv_volume_directory.stat.gid == 777
+        and sonarr_tv_volume_directory.stat.gid == 888
         and sonarr_tv_volume_directory.stat.mode == '0750'
         )
 
@@ -144,7 +144,7 @@
       failed_when: not (
         sonarr_downloads_volume_directory.stat.exists
         and sonarr_downloads_volume_directory.stat.uid == 777
-        and sonarr_downloads_volume_directory.stat.gid == 777
+        and sonarr_downloads_volume_directory.stat.gid == 888
         and sonarr_downloads_volume_directory.stat.mode == '0750'
         )
 
@@ -155,7 +155,7 @@
       failed_when: not (
         radarr_config_volume_directory.stat.exists
         and radarr_config_volume_directory.stat.uid == 777
-        and radarr_config_volume_directory.stat.gid == 777
+        and radarr_config_volume_directory.stat.gid == 888
         and radarr_config_volume_directory.stat.mode == '0750'
         )
 
@@ -166,7 +166,7 @@
       failed_when: not (
         radarr_movies_volume_directory.stat.exists
         and radarr_movies_volume_directory.stat.uid == 777
-        and radarr_movies_volume_directory.stat.gid == 777
+        and radarr_movies_volume_directory.stat.gid == 888
         and radarr_movies_volume_directory.stat.mode == '0750'
         )
 
@@ -177,7 +177,7 @@
       failed_when: not (
         radarr_downloads_volume_directory.stat.exists
         and radarr_downloads_volume_directory.stat.uid == 777
-        and radarr_downloads_volume_directory.stat.gid == 777
+        and radarr_downloads_volume_directory.stat.gid == 888
         and radarr_downloads_volume_directory.stat.mode == '0750'
         )
 
@@ -188,7 +188,7 @@
       failed_when: not (
         bazarr_config_volume_directory.stat.exists
         and bazarr_config_volume_directory.stat.uid == 777
-        and bazarr_config_volume_directory.stat.gid == 777
+        and bazarr_config_volume_directory.stat.gid == 888
         and bazarr_config_volume_directory.stat.mode == '0750'
         )
 
@@ -199,7 +199,7 @@
       failed_when: not (
         bazarr_tv_volume_directory.stat.exists
         and bazarr_tv_volume_directory.stat.uid == 777
-        and bazarr_tv_volume_directory.stat.gid == 777
+        and bazarr_tv_volume_directory.stat.gid == 888
         and bazarr_tv_volume_directory.stat.mode == '0750'
         )
 
@@ -210,7 +210,7 @@
       failed_when: not (
         bazarr_movies_volume_directory.stat.exists
         and bazarr_movies_volume_directory.stat.uid == 777
-        and bazarr_movies_volume_directory.stat.gid == 777
+        and bazarr_movies_volume_directory.stat.gid == 888
         and bazarr_movies_volume_directory.stat.mode == '0750'
         )
 

@@ -1,6 +1,6 @@
 # ansible-usenet
 
-Installs `sabnzbd`, `sonarr` and `radarr` as docker containers managed by systemd.
+Installs [`sabnzbd`](https://sabnzbd.org/), [`sonarr`](https://sonarr.tv/), [`radarr`](https://radarr.video/) and [`bazarr`](https://www.bazarr.media/) as docker containers managed by systemd.
 
 ## System requirements
 
@@ -23,9 +23,10 @@ Installs `sabnzbd`, `sonarr` and `radarr` as docker containers managed by system
 
 | Variable      | Type | Mandatory? | Default | Description           |
 |---------------|------|------------|---------|-----------------------|
-| usenet_sabnzbd_version | text | no | latest | sabnzbd Docker image version |
-| usenet_sonarr_version  | text | no | latest | sonarr Docker image version |
-| usenet_radarr_version  | text | no | latest | radarr Docker image version |
+| usenet_sabnzbd_version | text | no | latest | sabnzbd's Docker image version |
+| usenet_sonarr_version  | text | no | latest | sonarr's Docker image version |
+| usenet_radarr_version  | text | no | latest | radarr's Docker image version |
+| usenet_bazarr_version  | text | no | latest | bazarr's Docker image version |
 | usenet_docker_working_directory | absolute path | no | /opt/usenet/docker | Docker working directory |
 | usenet_sabnzbd_config_volume_directory | absolute path | no | /srv/usenet/sabnzbd/config | sabnzbd config volume directory |
 | usenet_sabnzbd_downloads_volume_directory | absolute path | no | /srv/usenet/sabnzbd/downloads | sabnzbd downloads volume directory |
@@ -36,6 +37,9 @@ Installs `sabnzbd`, `sonarr` and `radarr` as docker containers managed by system
 | usenet_radarr_config_volume_directory                | absolute path | no | /srv/usenet/radarr/config | radarr config volume directory |
 | usenet_radarr_movies_volume_directory                | absolute path | no | /srv/usenet/radarr/movies | radarr movies volume directory |
 | usenet_radarr_downloads_volume_directory             | absolute path | no | /srv/usenet/radarr/downloads | radarr downloads volume directory |
+| usenet_bazarr_config_volume_directory                | absolute path | no | /srv/usenet/bazarr/config    | bazarr config volume directory |
+| usenet_bazarr_tv_volume_directory                    | absolute path | no | /srv/usenet/bazarr/tv        | bazarr tv volume directory |
+| usenet_bazarr_movies_volume_directory                | absolute path | no | /srv/usenet/bazarr/movies    | bazarr movies volume directory |
 | usenet_sabnzbd_network_interface                     | network address | no | 0.0.0.0 | Bound network interface for sabnzbd's web-interface |
 | usenet_sabnzbd_http_port                             | network port    | no | 8080    | Network port for sabnzbd's http web-interface |
 | usenet_sabnzbd_https_port                            | network port    | no | 9090    | Network port for sabnzbd's httpd web-interface |
@@ -43,8 +47,10 @@ Installs `sabnzbd`, `sonarr` and `radarr` as docker containers managed by system
 | usenet_sonarr_http_port                              | network port    | no | 8989    | Network port for sonarr's http web-interface |
 | usenet_radarr_network_interface                      | network address | no | 0.0.0.0 | Bound network interface for radarr's web-interface |
 | usenet_radarr_http_port                              | network port    | no | 7878    | Network port for radarr's http web-interface |
-| usenet_user_id                                       | user id         | no | 666     | User id sabnzbd and sonarr are running with |
-| usenet_group_id                                      | group id        | no | 666     | Group id sabnzbd and sonarr are running with |
+| usenet_bazarr_network_interface                      | network address | no | 0.0.0.0 | Bound network interface for bazarr's web-interface |
+| usenet_bazarr_http_port                              | network port    | no | 6767    | Network port for bazarr's http web-interface |
+| usenet_user_id                                       | user id         | no | 666     | User id the services are running with |
+| usenet_group_id                                      | group id        | no | 666     | Group id the services are running with |
 
 ## Example Playbook
 
@@ -65,13 +71,16 @@ Installs `sabnzbd`, `sonarr` and `radarr` as docker containers managed by system
       usenet_sabnzbd_version: version-3.1.1
       usenet_sonarr_version: version-2.0.0.5344
       usenet_radarr_version: version-3.0.0.4127
+      usenet_bazarr_version: version-v0.9.0.6
       usenet_sabnzbd_network_interface: 0.0.0.0
-      usenet_sabnzbd_http_port: 18080
-      usenet_sabnzbd_https_port: 19090
+      usenet_sabnzbd_http_port: 8080
+      usenet_sabnzbd_https_port: 9090
       usenet_sonarr_network_interface: 0.0.0.0
-      usenet_sonarr_http_port: 18989
+      usenet_sonarr_http_port: 8989
       usenet_radarr_network_interface: 0.0.0.0
-      usenet_radarr_http_port: 17878
+      usenet_radarr_http_port: 7878
+      usenet_bazarr_network_interface: 0.0.0.0
+      usenet_bazarr_http_port: 6767
       usenet_sabnzbd_config_volume_directory: /srv/usenet/sabnzbd/config
       usenet_sabnzbd_downloads_volume_directory: /srv/usenet/sabnzbd/downloads
       usenet_sabnzbd_incomplete_downloads_volume_directory: /srv/usenet/sabnzbd/incomplete-downloads
@@ -81,6 +90,11 @@ Installs `sabnzbd`, `sonarr` and `radarr` as docker containers managed by system
       usenet_radarr_config_volume_directory: /srv/usenet/radarr/config
       usenet_radarr_movies_volume_directory: /srv/usenet/radarr/movies
       usenet_radarr_downloads_volume_directory: /srv/usenet/radarr/downloads
+      usenet_bazarr_config_volume_directory: /srv/usenet/bazarr/config
+      usenet_bazarr_tv_volume_directory: /srv/usenet/bazarr/tv
+      usenet_bazarr_movies_volume_directory: /srv/usenet/bazarr/movies
+      usenet_user_id: 666
+      usenet_group_id: 666
 ```
 
 ## Testing
@@ -123,3 +137,4 @@ MIT
 * [sabnzbd @ Docker hub](https://hub.docker.com/r/linuxserver/sabnzbd)
 * [sonarr @ Docker hub](https://hub.docker.com/r/linuxserver/sonarr)
 * [radarr @ Docker hub](https://hub.docker.com/r/linuxserver/radarr)
+* [bazarr @ Docker hub](https://hub.docker.com/r/linuxserver/bazarr)

@@ -78,6 +78,30 @@
     group: "{{ usenet_group_id | int }}"
     mode: 0750
 
+- name: create bazarr config volume directory
+  file:
+    path: "{{ usenet_bazarr_config_volume_directory }}"
+    state: directory
+    owner: "{{ usenet_user_id | int }}"
+    group: "{{ usenet_group_id | int }}"
+    mode: 0750
+
+- name: create bazarr tv volume directory
+  file:
+    path: "{{ usenet_bazarr_tv_volume_directory }}"
+    state: directory
+    owner: "{{ usenet_user_id | int }}"
+    group: "{{ usenet_group_id | int }}"
+    mode: 0750
+
+- name: create bazarr movies volume directory
+  file:
+    path: "{{ usenet_bazarr_movies_volume_directory }}"
+    state: directory
+    owner: "{{ usenet_user_id | int }}"
+    group: "{{ usenet_group_id | int }}"
+    mode: 0750
+
 - name: template docker-compose file
   template:
     src: docker-compose.yml.j2

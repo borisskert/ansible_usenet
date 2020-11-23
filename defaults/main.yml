@@ -4,6 +4,7 @@ usenet_service_name: usenet
 usenet_sabnzbd_version: latest
 usenet_sonarr_version: latest
 usenet_radarr_version: latest
+usenet_bazarr_version: latest
 
 usenet_docker_working_directory: /opt/usenet/docker
 usenet_docker_compose_path: "{{ usenet_docker_working_directory }}/docker-compose.yml"
@@ -23,6 +24,11 @@ usenet_radarr_config_volume_directory: "{{ usenet_radarr_volume_directory }}/con
 usenet_radarr_movies_volume_directory: "{{ usenet_radarr_volume_directory }}/movies"
 usenet_radarr_downloads_volume_directory: "{{ usenet_radarr_volume_directory }}/downloads"
 
+usenet_bazarr_volume_directory: /srv/usenet/bazarr
+usenet_bazarr_config_volume_directory: "{{ usenet_bazarr_volume_directory }}/config"
+usenet_bazarr_tv_volume_directory: "{{ usenet_bazarr_volume_directory }}/tv"
+usenet_bazarr_movies_volume_directory: "{{ usenet_bazarr_volume_directory }}/movies"
+
 usenet_sabnzbd_network_interface: 0.0.0.0
 usenet_sabnzbd_http_port: 8080
 usenet_sabnzbd_https_port: 9090
@@ -32,6 +38,9 @@ usenet_sonarr_http_port: 8989
 
 usenet_radarr_network_interface: 0.0.0.0
 usenet_radarr_http_port: 7878
+
+usenet_bazarr_network_interface: 0.0.0.0
+usenet_bazarr_http_port: 6767
 
 usenet_user_id: 666
 usenet_group_id: 666

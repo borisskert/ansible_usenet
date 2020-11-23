@@ -66,6 +66,22 @@
                 - 127.0.0.1:17878:7878
               restart: unless-stopped
 
+            bazarr:
+              image: ghcr.io/linuxserver/bazarr:version-v0.9.0.6
+              container_name: bazarr
+              environment:
+                - PUID=777
+                - PGID=777
+                - TZ=Europe/London
+                - UMASK_SET=022
+              volumes:
+                - /srv/my_usenet/bazarr/config:/config
+                - /srv/my_usenet/bazarr/movies:/movies
+                - /srv/my_usenet/bazarr/tv:/tv
+              ports:
+                - 127.0.0.1:16767:6767
+              restart: unless-stopped
+
     - name: Should create sabnzbd config volume
       stat:
         path: /srv/my_usenet/sabnzbd/config
@@ -165,6 +181,39 @@
         and radarr_downloads_volume_directory.stat.mode == '0750'
         )
 
+    - name: Should create bazarr config volume
+      stat:
+        path: /srv/my_usenet/bazarr/config
+      register: bazarr_config_volume_directory
+      failed_when: not (
+        bazarr_config_volume_directory.stat.exists
+        and bazarr_config_volume_directory.stat.uid == 777
+        and bazarr_config_volume_directory.stat.gid == 777
+        and bazarr_config_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create bazarr tv volume
+      stat:
+        path: /srv/my_usenet/bazarr/tv
+      register: bazarr_tv_volume_directory
+      failed_when: not (
+        bazarr_tv_volume_directory.stat.exists
+        and bazarr_tv_volume_directory.stat.uid == 777
+        and bazarr_tv_volume_directory.stat.gid == 777
+        and bazarr_tv_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create bazarr movies volume
+      stat:
+        path: /srv/my_usenet/bazarr/movies
+      register: bazarr_movies_volume_directory
+      failed_when: not (
+        bazarr_movies_volume_directory.stat.exists
+        and bazarr_movies_volume_directory.stat.uid == 777
+        and bazarr_movies_volume_directory.stat.gid == 777
+        and bazarr_movies_volume_directory.stat.mode == '0750'
+        )
+
     - name: Should usenet systemd unit file
       slurp:
         src: /etc/systemd/system/usenet.service
@@ -246,6 +295,19 @@
       delay: 1
       until: netcat_17878 is defined
         and netcat_17878.rc == 0
+      when: not (
+        molecule_docker_environment is defined
+        and molecule_docker_environment | bool
+        )
+
+    - name: Should open 16767/tcp port
+      command: nc -z -w1 localhost 16767
+      changed_when: false
+      register: netcat_16767
+      retries: 300
+      delay: 1
+      until: netcat_16767 is defined
+        and netcat_16767.rc == 0
       when: not (
         molecule_docker_environment is defined
         and molecule_docker_environment | bool

@@ -53,4 +53,11 @@ usenet_nzbhydra2_http_port: 5076
 usenet_user_id: 666
 usenet_group_id: 666
 
+usenet_vpn_enabled: false
+usenet_vpn_volume_directory: /srv/usenet/vpn
+usenet_vpn_config_volume_directory: "{{ usenet_vpn_volume_directory }}/config"
+usenet_vpn_server_certificate_path: "{{ usenet_vpn_config_volume_directory }}/vpn-ca.crt"
+usenet_vpn_private_volume_directory: "{{ usenet_vpn_volume_directory }}/private"
+usenet_vpn_private_credentials_file_path: "{{ usenet_vpn_private_volume_directory }}/credentials.env"
+
 docker_compose_executable: /usr/local/bin/docker-compose

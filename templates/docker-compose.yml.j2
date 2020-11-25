@@ -4,6 +4,9 @@ services:
   sabnzbd:
     image: ghcr.io/linuxserver/sabnzbd:{{ usenet_sabnzbd_version }}
     container_name: sabnzbd
+{% if usenet_vpn_enabled is defined and usenet_vpn_enabled | bool %}
+    network_mode: service:vpn
+{% endif %}
     environment:
       - PUID={{ usenet_user_id }}
       - PGID={{ usenet_group_id }}
@@ -13,14 +16,19 @@ services:
       - {{ usenet_sabnzbd_config_volume_directory }}:/config
       - {{ usenet_sabnzbd_downloads_volume_directory }}:/downloads
       - {{ usenet_sabnzbd_incomplete_downloads_volume_directory }}:/incomplete-downloads
+{% if usenet_vpn_enabled is not defined or usenet_vpn_enabled | bool == false %}
     ports:
       - {{ usenet_sabnzbd_network_interface }}:{{ usenet_sabnzbd_http_port }}:8080
       - {{ usenet_sabnzbd_network_interface }}:{{ usenet_sabnzbd_https_port }}:9090
+{% endif %}
     restart: unless-stopped
 
   sonarr:
     image: ghcr.io/linuxserver/sonarr:{{ usenet_sonarr_version }}
     container_name: sonarr
+{% if usenet_vpn_enabled is defined and usenet_vpn_enabled | bool %}
+    network_mode: service:vpn
+{% endif %}
     environment:
       - PUID={{ usenet_user_id }}
       - PGID={{ usenet_group_id }}
@@ -32,13 +40,18 @@ services:
       - {{ usenet_sonarr_config_volume_directory }}:/config
       - {{ usenet_sonarr_tv_volume_directory }}:/tv
       - {{ usenet_sonarr_downloads_volume_directory }}:/downloads
+{% if usenet_vpn_enabled is not defined or usenet_vpn_enabled | bool == false %}
     ports:
       - {{ usenet_sonarr_network_interface }}:{{ usenet_sonarr_http_port }}:8989
+{% endif %}
     restart: unless-stopped
 
   radarr:
     image: ghcr.io/linuxserver/radarr:{{ usenet_radarr_version }}
     container_name: radarr
+{% if usenet_vpn_enabled is defined and usenet_vpn_enabled | bool %}
+    network_mode: service:vpn
+{% endif %}
     environment:
       - PUID={{ usenet_user_id }}
       - PGID={{ usenet_group_id }}
@@ -48,13 +61,18 @@ services:
       - {{ usenet_radarr_config_volume_directory }}:/config
       - {{ usenet_radarr_movies_volume_directory }}:/movies
       - {{ usenet_radarr_downloads_volume_directory }}:/downloads
+{% if usenet_vpn_enabled is not defined or usenet_vpn_enabled | bool == false %}
     ports:
       - {{ usenet_radarr_network_interface }}:{{ usenet_radarr_http_port }}:7878
+{% endif %}
     restart: unless-stopped
 
   bazarr:
     image: ghcr.io/linuxserver/bazarr:{{ usenet_bazarr_version }}
     container_name: bazarr
+{% if usenet_vpn_enabled is defined and usenet_vpn_enabled | bool %}
+    network_mode: service:vpn
+{% endif %}
     environment:
       - PUID={{ usenet_user_id }}
       - PGID={{ usenet_group_id }}
@@ -64,13 +82,18 @@ services:
       - {{ usenet_bazarr_config_volume_directory }}:/config
       - {{ usenet_bazarr_movies_volume_directory }}:/movies
       - {{ usenet_bazarr_tv_volume_directory }}:/tv
+{% if usenet_vpn_enabled is not defined or usenet_vpn_enabled | bool == false %}
     ports:
       - {{ usenet_bazarr_network_interface }}:{{ usenet_bazarr_http_port }}:6767
+{% endif %}
     restart: unless-stopped
 
   nzbhydra2:
     image: ghcr.io/linuxserver/nzbhydra2:{{ usenet_nzbhydra2_version }}
     container_name: nzbhydra2
+{% if usenet_vpn_enabled is defined and usenet_vpn_enabled | bool %}
+    network_mode: service:vpn
+{% endif %}
     environment:
       - PUID={{ usenet_user_id }}
       - PGID={{ usenet_group_id }}
@@ -78,6 +101,29 @@ services:
     volumes:
       - {{ usenet_nzbhydra2_config_volume_directory }}:/config
       - {{ usenet_nzbhydra2_downloads_volume_directory }}:/downloads
+{% if usenet_vpn_enabled is not defined or usenet_vpn_enabled | bool == false %}
     ports:
       - {{ usenet_nzbhydra2_network_interface }}:{{ usenet_nzbhydra2_http_port }}:5076
+{% endif %}
     restart: unless-stopped
+{% if usenet_vpn_enabled is defined and usenet_vpn_enabled | bool %}
+
+  vpn:
+    image: dperson/openvpn-client
+    container_name: usenet_vpn
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    volumes:
+      - {{ usenet_vpn_config_volume_directory }}:/vpn
+    ports:
+      - {{ usenet_sabnzbd_network_interface }}:{{ usenet_sabnzbd_http_port }}:8080
+      - {{ usenet_sabnzbd_network_interface }}:{{ usenet_sabnzbd_https_port }}:9090
+      - {{ usenet_sonarr_network_interface }}:{{ usenet_sonarr_http_port }}:8989
+      - {{ usenet_radarr_network_interface }}:{{ usenet_radarr_http_port }}:7878
+      - {{ usenet_bazarr_network_interface }}:{{ usenet_bazarr_http_port }}:6767
+      - {{ usenet_nzbhydra2_network_interface }}:{{ usenet_nzbhydra2_http_port }}:5076
+    command: ["-v", "{{ usenet_vpn_server }};${USERNAME};${PASSWORD}"]
+    restart: unless-stopped
+{% endif %}

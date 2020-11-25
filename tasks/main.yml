@@ -118,6 +118,44 @@
     group: "{{ usenet_group_id | int }}"
     mode: 0750
 
+- name: create vpn config volume directory
+  file:
+    path: "{{ usenet_vpn_config_volume_directory }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0750
+  when: usenet_vpn_enabled | bool
+
+- name: create private volume directory
+  file:
+    path: "{{ usenet_vpn_private_volume_directory }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+  when: usenet_vpn_enabled | bool
+
+- name: create private credentials file
+  template:
+    src: credentials.env.j2
+    dest: "{{ usenet_vpn_private_credentials_file_path }}"
+    owner: root
+    group: root
+    mode: 0700
+  when: usenet_vpn_enabled | bool
+  notify: Restart usenet service
+
+- name: create vpn server certificate file
+  copy:
+    dest: "{{ usenet_vpn_server_certificate_path }}"
+    content: "{{ usenet_vpn_ca_cert }}"
+    owner: root
+    group: root
+    mode: 0644
+  when: usenet_vpn_enabled | bool
+  notify: Restart usenet service
+
 - name: template docker-compose file
   template:
     src: docker-compose.yml.j2

@@ -11,6 +11,9 @@ ExecStartPre=-{{ docker_compose_executable }} \
   --project-directory {{ usenet_docker_working_directory }} \
   --file {{ usenet_docker_compose_path }} \
   --project-name {{ usenet_service_name }} \
+{% if usenet_vpn_enabled is defined and usenet_vpn_enabled | bool %}
+  --env-file {{ usenet_vpn_private_credentials_file_path }} \
+{% endif %}
   down \
   --remove-orphans
 
@@ -18,18 +21,27 @@ ExecStartPre={{ docker_compose_executable }} \
   --project-directory {{ usenet_docker_working_directory }} \
   --file {{ usenet_docker_compose_path }} \
   --project-name {{ usenet_service_name }} \
+{% if usenet_vpn_enabled is defined and usenet_vpn_enabled | bool %}
+  --env-file {{ usenet_vpn_private_credentials_file_path }} \
+{% endif %}
   pull
 
 ExecStart={{ docker_compose_executable }} \
   --project-directory {{ usenet_docker_working_directory }} \
   --file {{ usenet_docker_compose_path }} \
   --project-name {{ usenet_service_name }} \
+{% if usenet_vpn_enabled is defined and usenet_vpn_enabled | bool %}
+  --env-file {{ usenet_vpn_private_credentials_file_path }} \
+{% endif %}
   up
 
 ExecStop={{ docker_compose_executable }} \
   --project-directory {{ usenet_docker_working_directory }} \
   --file {{ usenet_docker_compose_path }} \
   --project-name {{ usenet_service_name }} \
+{% if usenet_vpn_enabled is defined and usenet_vpn_enabled | bool %}
+  --env-file {{ usenet_vpn_private_credentials_file_path }} \
+{% endif %}
   down \
   --remove-orphans
 

@@ -1,0 +1,74 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  roles:
+    - role: ansible_usenet
+      usenet_sabnzbd_version: version-3.1.1
+      usenet_sonarr_version: version-2.0.0.5344
+      usenet_radarr_version: version-3.0.0.4127
+      usenet_bazarr_version: version-v0.9.0.6
+      usenet_nzbhydra2_version: version-v3.5.1
+      usenet_sabnzbd_network_interface: 127.0.0.1
+      usenet_sabnzbd_http_port: 18080
+      usenet_sabnzbd_https_port: 19090
+      usenet_sonarr_network_interface: 127.0.0.1
+      usenet_sonarr_http_port: 18989
+      usenet_radarr_network_interface: 127.0.0.1
+      usenet_radarr_http_port: 17878
+      usenet_bazarr_network_interface: 127.0.0.1
+      usenet_bazarr_http_port: 16767
+      usenet_nzbhydra2_network_interface: 127.0.0.1
+      usenet_nzbhydra2_http_port: 15076
+      usenet_sabnzbd_config_volume_directory: /srv/my_usenet/sabnzbd/config
+      usenet_sabnzbd_downloads_volume_directory: /srv/my_usenet/sabnzbd/downloads
+      usenet_sabnzbd_incomplete_downloads_volume_directory: /srv/my_usenet/sabnzbd/incomplete-downloads
+      usenet_sonarr_config_volume_directory: /srv/my_usenet/sonarr/config
+      usenet_sonarr_tv_volume_directory: /srv/my_usenet/sonarr/tv
+      usenet_sonarr_downloads_volume_directory: /srv/my_usenet/sonarr/downloads
+      usenet_radarr_config_volume_directory: /srv/my_usenet/radarr/config
+      usenet_radarr_movies_volume_directory: /srv/my_usenet/radarr/movies
+      usenet_radarr_downloads_volume_directory: /srv/my_usenet/radarr/downloads
+      usenet_bazarr_config_volume_directory: /srv/my_usenet/bazarr/config
+      usenet_bazarr_tv_volume_directory: /srv/my_usenet/bazarr/tv
+      usenet_bazarr_movies_volume_directory: /srv/my_usenet/bazarr/movies
+      usenet_nzbhydra2_config_volume_directory: /srv/my_usenet/nzbhydra2/config
+      usenet_nzbhydra2_downloads_volume_directory: /srv/my_usenet/nzbhydra2/downloads
+      usenet_user_id: 777
+      usenet_group_id: 888
+      usenet_vpn_enabled: true
+      usenet_vpn_server: my.vpn.server
+      usenet_vpn_username: my_vpn_username
+      usenet_vpn_password: my_vpn_password
+      usenet_vpn_config_volume_directory: /srv/my_usenet/vpn/config
+      usenet_vpn_private_volume_directory: /srv/my_usenet/vpn/private
+      usenet_vpn_ca_cert: |
+        -----BEGIN CERTIFICATE-----
+        MyCustomCertificateJAOMAQRbD8ADYMA0GCSqGSIb3DQEBCwUAMIGiMQswCQYD
+        VQQGEwJCUjELMAkGA1UECBMCU1AxETAPBgNVBAcTCFNhb1BhdWxvMRMwEQYDVQQK
+        EwpFeGFtcGxlQ29tMQ0wCwYDVQQLEwRBQ01FMRYwFAYDVQQDEw1FeGFtcGxlQ29t
+        IENBMRAwDgYDVQQpEwdFYXN5UlNBMSUwIwYJKoZIhvcNAQkBFhZwb3N0bWFzdGVy
+        QGV4YW1wbGUuY29tMB4XDTE0MTIyODE2NTg1MVoXDTI0MTIyNTE2NTg1MVowgaIx
+        CzAJBgNVBAYTAkJSMQswCQYDVQQIEwJTUDERMA8GA1UEBxMIU2FvUGF1bG8xEzAR
+        BgNVBAoTCkV4YW1wbGVDb20xDTALBgNVBAsTBEFDTUUxFjAUBgNVBAMTDUV4YW1w
+        bGVDb20gQ0ExEDAOBgNVBCkTB0Vhc3lSU0ExJTAjBgkqhkiG9w0BCQEWFnBvc3Rt
+        YXN0ZXJAZXhhbXBsZS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIB
+        AQDN2iT4+3BgxWjxm3uiFSoLpGoi6Elevywwx4EsvGdqWBNkANGH4wZdHrf+nCgB
+        yofybvFXKKPMioPrh08aBOTXTyM5tZvjgcRKrWd/9oL5VrqaDym4ugFEHjugBy7J
+        lXQfLIfIxwlZXKVMjMg2iBC/9H3H6fO2zthqkrLB0VPeAwvuUPkBxWfIps4MsjDm
+        bBinYHzxwJwPOsFdYnqqcOVRF9v3mt+PbFk+M5fW3UY63KE5Ry2FohsaiiAJ/JMc
+        gFEJuNDmoMl/ozPeOY5ZNS3ARMBisHSx69tDip1mPQYGNG5yuy5TFI1pKzkEFV+9
+        lXEgJFOfefyTdszmFWHLC14vAgMBAAGjggELMIIBBzAdBgNVHQ4EFgQUZtPpYH36
+        aVdAP/6N8Eue14SG7HAwgdcGA1UdIwSBzzCBzIAUZtPpYH36aVdAP/6N8Eue14SG
+        7HChgaikgaUwgaIxCzAJBgNVBAYTAkJSMQswCQYDVQQIEwJTUDERMA8GA1UEBxMI
+        U2FvUGF1bG8xEzARBgNVBAoTCkV4YW1wbGVDb20xDTALBgNVBAsTBEFDTUUxFjAU
+        BgNVBAMTDUV4YW1wbGVDb20gQ0ExEDAOBgNVBCkTB0Vhc3lSU0ExJTAjBgkqhkiG
+        9w0BCQEWFnBvc3RtYXN0ZXJAZXhhbXBsZS5jb22CCQDjAEEWw/AA2DAMBgNVHRME
+        BTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQAzoAlU1DoAw0pkHMwgsfWvg6JQsIOL
+        dNjB3bS5t5fo+tiRjSBPVOkPUzfWMyqpOp19+Y/MWQ5ZSJ5uGsVz5Bas5iqLMDXU
+        SouqdfT1l5rT+cD6hXrro2OsDHHajCrR4Vz/g36wMQ5f9403EjxBdWVs/Ul5n++2
+        E59a08pSBv40DNiqQXDdSWt1cHsA/m7sX7pDatqNEIYg11tgO5sixpdCCz9OakLp
+        r5IO4jodz6OvT3nZ7gH84UfeNXBUjO/BNYhyGGge9TmpRhRM9q8CNpw4LtQFuO4/
+        xcPC3D4Gk0EW83PJorGi1+lPGNusEDO0xqlv2pLyQ07XVKWsYZo3AKQY
+        -----END CERTIFICATE-----

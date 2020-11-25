@@ -27,3 +27,8 @@ jobs:
         uses: borisskert/molecule-action@v20.11.09
         with:
           arguments: test --scenario-name docker-all-parameters
+
+      - name: Run tests with with-vpn
+        uses: borisskert/molecule-action@v20.11.09
+        with:
+          arguments: test --scenario-name docker-with-vpn

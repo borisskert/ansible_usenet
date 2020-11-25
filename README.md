@@ -56,6 +56,8 @@ Installs [`sabnzbd`](https://sabnzbd.org/), [`sonarr`](https://sonarr.tv/), [`ra
 | usenet_nzbhydra2_http_port                           | network port    | no | 5076    | Network port for nzbhydra2's http web-interface |
 | usenet_user_id                                       | user id         | no | 666     | User id the services are running with |
 | usenet_group_id                                      | group id        | no | 666     | Group id the services are running with |
+| usenet_use_vpn                                       | boolean         | no | false   | Specifies if `sabnzbd` and `nzbhydra2` are using a vpn container connection |
+| usenet_vpn_container_name                            | text            | yes, if `usenet_use_vpn` is true | The name of the used container which provides the vpn connection |
 
 ## Example Playbook
 
@@ -122,7 +124,7 @@ Requirements:
 ### Run within docker
 
 ```shell script
-molecule test --scenario-name docker-default && molecule test --scenario-name docker-all-parameters
+molecule test --scenario-name docker-default && molecule test --scenario-name docker-all-parameters && molecule test -s docker-with-vpn
 ```
 
 ### Run within Vagrant

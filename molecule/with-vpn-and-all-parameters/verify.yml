@@ -1,0 +1,449 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Should template docker-compose file
+      slurp:
+        src: /opt/usenet/docker/docker-compose.yml
+      register: docker_compose_file
+      failed_when:
+        not docker_compose_file.content == ( expected_content | b64encode )
+      vars:
+        expected_content: |
+          ---
+          version: "3.2"
+          services:
+            sabnzbd:
+              image: ghcr.io/linuxserver/sabnzbd:version-3.1.1
+              container_name: sabnzbd
+              network_mode: service:vpn
+              environment:
+                - PUID=777
+                - PGID=888
+                - TZ=Europe/London
+                - UMASK_SET=022
+              volumes:
+                - /srv/my_usenet/sabnzbd/config:/config
+                - /srv/my_usenet/sabnzbd/downloads:/downloads
+                - /srv/my_usenet/sabnzbd/incomplete-downloads:/incomplete-downloads
+              restart: unless-stopped
+
+            sonarr:
+              image: ghcr.io/linuxserver/sonarr:version-2.0.0.5344
+              container_name: sonarr
+              network_mode: service:vpn
+              environment:
+                - PUID=777
+                - PGID=888
+                - TZ=Europe/London
+                - UMASK_SET=022
+              depends_on:
+                - sabnzbd
+              volumes:
+                - /srv/my_usenet/sonarr/config:/config
+                - /srv/my_usenet/sonarr/tv:/tv
+                - /srv/my_usenet/sonarr/downloads:/downloads
+              restart: unless-stopped
+
+            radarr:
+              image: ghcr.io/linuxserver/radarr:version-3.0.0.4127
+              container_name: radarr
+              network_mode: service:vpn
+              environment:
+                - PUID=777
+                - PGID=888
+                - TZ=Europe/London
+                - UMASK_SET=022
+              volumes:
+                - /srv/my_usenet/radarr/config:/config
+                - /srv/my_usenet/radarr/movies:/movies
+                - /srv/my_usenet/radarr/downloads:/downloads
+              restart: unless-stopped
+
+            bazarr:
+              image: ghcr.io/linuxserver/bazarr:version-v0.9.0.6
+              container_name: bazarr
+              network_mode: service:vpn
+              environment:
+                - PUID=777
+                - PGID=888
+                - TZ=Europe/London
+                - UMASK_SET=022
+              volumes:
+                - /srv/my_usenet/bazarr/config:/config
+                - /srv/my_usenet/bazarr/movies:/movies
+                - /srv/my_usenet/bazarr/tv:/tv
+              restart: unless-stopped
+
+            nzbhydra2:
+              image: ghcr.io/linuxserver/nzbhydra2:version-v3.5.1
+              container_name: nzbhydra2
+              network_mode: service:vpn
+              environment:
+                - PUID=777
+                - PGID=888
+                - TZ=Europe/London
+              volumes:
+                - /srv/my_usenet/nzbhydra2/config:/config
+                - /srv/my_usenet/nzbhydra2/downloads:/downloads
+              restart: unless-stopped
+
+            vpn:
+              image: dperson/openvpn-client
+              container_name: usenet_vpn
+              cap_add:
+                - NET_ADMIN
+              devices:
+                - /dev/net/tun
+              volumes:
+                - /srv/my_usenet/vpn/config:/vpn
+              ports:
+                - 127.0.0.1:18080:8080
+                - 127.0.0.1:19090:9090
+                - 127.0.0.1:18989:8989
+                - 127.0.0.1:17878:7878
+                - 127.0.0.1:16767:6767
+                - 127.0.0.1:15076:5076
+              command: ["-v", "my.vpn.server;${USERNAME};${PASSWORD}"]
+              restart: unless-stopped
+
+    - name: Should create sabnzbd config volume
+      stat:
+        path: /srv/my_usenet/sabnzbd/config
+      register: sabnzbd_config_volume_directory
+      failed_when: not (
+        sabnzbd_config_volume_directory.stat.exists
+        and sabnzbd_config_volume_directory.stat.uid == 777
+        and sabnzbd_config_volume_directory.stat.gid == 888
+        and sabnzbd_config_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create sabnzbd downloads volume
+      stat:
+        path: /srv/my_usenet/sabnzbd/downloads
+      register: sabnzbd_downloads_volume_directory
+      failed_when: not (
+        sabnzbd_downloads_volume_directory.stat.exists
+        and sabnzbd_downloads_volume_directory.stat.uid == 777
+        and sabnzbd_downloads_volume_directory.stat.gid == 888
+        and sabnzbd_downloads_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create sabnzbd incomplete downloads volume
+      stat:
+        path: /srv/my_usenet/sabnzbd/downloads
+      register: sabnzbd_incomplete_downloads_volume_directory
+      failed_when: not (
+        sabnzbd_incomplete_downloads_volume_directory.stat.exists
+        and sabnzbd_incomplete_downloads_volume_directory.stat.uid == 777
+        and sabnzbd_incomplete_downloads_volume_directory.stat.gid == 888
+        and sabnzbd_incomplete_downloads_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create sonarr config volume
+      stat:
+        path: /srv/my_usenet/sonarr/config
+      register: sonarr_config_volume_directory
+      failed_when: not (
+        sonarr_config_volume_directory.stat.exists
+        and sonarr_config_volume_directory.stat.uid == 777
+        and sonarr_config_volume_directory.stat.gid == 888
+        and sonarr_config_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create sonarr tv volume
+      stat:
+        path: /srv/my_usenet/sonarr/tv
+      register: sonarr_tv_volume_directory
+      failed_when: not (
+        sonarr_tv_volume_directory.stat.exists
+        and sonarr_tv_volume_directory.stat.uid == 777
+        and sonarr_tv_volume_directory.stat.gid == 888
+        and sonarr_tv_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create sonarr downloads volume
+      stat:
+        path: /srv/my_usenet/sonarr/downloads
+      register: sonarr_downloads_volume_directory
+      failed_when: not (
+        sonarr_downloads_volume_directory.stat.exists
+        and sonarr_downloads_volume_directory.stat.uid == 777
+        and sonarr_downloads_volume_directory.stat.gid == 888
+        and sonarr_downloads_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create radarr config volume
+      stat:
+        path: /srv/my_usenet/radarr/config
+      register: radarr_config_volume_directory
+      failed_when: not (
+        radarr_config_volume_directory.stat.exists
+        and radarr_config_volume_directory.stat.uid == 777
+        and radarr_config_volume_directory.stat.gid == 888
+        and radarr_config_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create radarr movies volume
+      stat:
+        path: /srv/my_usenet/radarr/movies
+      register: radarr_movies_volume_directory
+      failed_when: not (
+        radarr_movies_volume_directory.stat.exists
+        and radarr_movies_volume_directory.stat.uid == 777
+        and radarr_movies_volume_directory.stat.gid == 888
+        and radarr_movies_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create radarr downloads volume
+      stat:
+        path: /srv/my_usenet/radarr/downloads
+      register: radarr_downloads_volume_directory
+      failed_when: not (
+        radarr_downloads_volume_directory.stat.exists
+        and radarr_downloads_volume_directory.stat.uid == 777
+        and radarr_downloads_volume_directory.stat.gid == 888
+        and radarr_downloads_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create bazarr config volume
+      stat:
+        path: /srv/my_usenet/bazarr/config
+      register: bazarr_config_volume_directory
+      failed_when: not (
+        bazarr_config_volume_directory.stat.exists
+        and bazarr_config_volume_directory.stat.uid == 777
+        and bazarr_config_volume_directory.stat.gid == 888
+        and bazarr_config_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create bazarr tv volume
+      stat:
+        path: /srv/my_usenet/bazarr/tv
+      register: bazarr_tv_volume_directory
+      failed_when: not (
+        bazarr_tv_volume_directory.stat.exists
+        and bazarr_tv_volume_directory.stat.uid == 777
+        and bazarr_tv_volume_directory.stat.gid == 888
+        and bazarr_tv_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create bazarr movies volume
+      stat:
+        path: /srv/my_usenet/bazarr/movies
+      register: bazarr_movies_volume_directory
+      failed_when: not (
+        bazarr_movies_volume_directory.stat.exists
+        and bazarr_movies_volume_directory.stat.uid == 777
+        and bazarr_movies_volume_directory.stat.gid == 888
+        and bazarr_movies_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create nzbhydra2 config volume
+      stat:
+        path: /srv/my_usenet/nzbhydra2/config
+      register: nzbhydra2_config_volume_directory
+      failed_when: not (
+        nzbhydra2_config_volume_directory.stat.exists
+        and nzbhydra2_config_volume_directory.stat.uid == 777
+        and nzbhydra2_config_volume_directory.stat.gid == 888
+        and nzbhydra2_config_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create nzbhydra2 downloads volume
+      stat:
+        path: /srv/my_usenet/nzbhydra2/downloads
+      register: nzbhydra2_downloads_volume_directory
+      failed_when: not (
+        nzbhydra2_downloads_volume_directory.stat.exists
+        and nzbhydra2_downloads_volume_directory.stat.uid == 777
+        and nzbhydra2_downloads_volume_directory.stat.gid == 888
+        and nzbhydra2_downloads_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create vpn config volume
+      stat:
+        path: /srv/my_usenet/vpn/config
+      register: usenet_vpn_config_volume_directory
+      failed_when: not (
+        usenet_vpn_config_volume_directory.stat.exists
+        and usenet_vpn_config_volume_directory.stat.pw_name == 'root'
+        and usenet_vpn_config_volume_directory.stat.gr_name == 'root'
+        and usenet_vpn_config_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create vpn private volume directory
+      stat:
+        path: /srv/my_usenet/vpn/private
+      register: usenet_vpn_private_volume_directory
+      failed_when: not (
+        usenet_vpn_private_volume_directory.stat.exists
+        and usenet_vpn_private_volume_directory.stat.pw_name == 'root'
+        and usenet_vpn_private_volume_directory.stat.gr_name == 'root'
+        and usenet_vpn_private_volume_directory.stat.mode == '0700'
+        )
+
+    - name: Should create vpn private credentials file
+      slurp:
+        src: /srv/my_usenet/vpn/private/credentials.env
+      register: openvpn_credentials_file
+      failed_when: not openvpn_credentials_file.content == ( expected_content | b64encode )
+      vars:
+        expected_content: |
+          USERNAME=my_vpn_username
+          PASSWORD=my_vpn_password
+
+    - name: Should create server certificate file
+      slurp:
+        src: /srv/my_usenet/vpn/config/vpn-ca.crt
+      register: server_certificate_file
+      failed_when:
+        not server_certificate_file.content == ( expected_content | b64encode )
+      vars:
+        expected_content: |
+          -----BEGIN CERTIFICATE-----
+          MyCustomCertificateJAOMAQRbD8ADYMA0GCSqGSIb3DQEBCwUAMIGiMQswCQYD
+          VQQGEwJCUjELMAkGA1UECBMCU1AxETAPBgNVBAcTCFNhb1BhdWxvMRMwEQYDVQQK
+          EwpFeGFtcGxlQ29tMQ0wCwYDVQQLEwRBQ01FMRYwFAYDVQQDEw1FeGFtcGxlQ29t
+          IENBMRAwDgYDVQQpEwdFYXN5UlNBMSUwIwYJKoZIhvcNAQkBFhZwb3N0bWFzdGVy
+          QGV4YW1wbGUuY29tMB4XDTE0MTIyODE2NTg1MVoXDTI0MTIyNTE2NTg1MVowgaIx
+          CzAJBgNVBAYTAkJSMQswCQYDVQQIEwJTUDERMA8GA1UEBxMIU2FvUGF1bG8xEzAR
+          BgNVBAoTCkV4YW1wbGVDb20xDTALBgNVBAsTBEFDTUUxFjAUBgNVBAMTDUV4YW1w
+          bGVDb20gQ0ExEDAOBgNVBCkTB0Vhc3lSU0ExJTAjBgkqhkiG9w0BCQEWFnBvc3Rt
+          YXN0ZXJAZXhhbXBsZS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIB
+          AQDN2iT4+3BgxWjxm3uiFSoLpGoi6Elevywwx4EsvGdqWBNkANGH4wZdHrf+nCgB
+          yofybvFXKKPMioPrh08aBOTXTyM5tZvjgcRKrWd/9oL5VrqaDym4ugFEHjugBy7J
+          lXQfLIfIxwlZXKVMjMg2iBC/9H3H6fO2zthqkrLB0VPeAwvuUPkBxWfIps4MsjDm
+          bBinYHzxwJwPOsFdYnqqcOVRF9v3mt+PbFk+M5fW3UY63KE5Ry2FohsaiiAJ/JMc
+          gFEJuNDmoMl/ozPeOY5ZNS3ARMBisHSx69tDip1mPQYGNG5yuy5TFI1pKzkEFV+9
+          lXEgJFOfefyTdszmFWHLC14vAgMBAAGjggELMIIBBzAdBgNVHQ4EFgQUZtPpYH36
+          aVdAP/6N8Eue14SG7HAwgdcGA1UdIwSBzzCBzIAUZtPpYH36aVdAP/6N8Eue14SG
+          7HChgaikgaUwgaIxCzAJBgNVBAYTAkJSMQswCQYDVQQIEwJTUDERMA8GA1UEBxMI
+          U2FvUGF1bG8xEzARBgNVBAoTCkV4YW1wbGVDb20xDTALBgNVBAsTBEFDTUUxFjAU
+          BgNVBAMTDUV4YW1wbGVDb20gQ0ExEDAOBgNVBCkTB0Vhc3lSU0ExJTAjBgkqhkiG
+          9w0BCQEWFnBvc3RtYXN0ZXJAZXhhbXBsZS5jb22CCQDjAEEWw/AA2DAMBgNVHRME
+          BTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQAzoAlU1DoAw0pkHMwgsfWvg6JQsIOL
+          dNjB3bS5t5fo+tiRjSBPVOkPUzfWMyqpOp19+Y/MWQ5ZSJ5uGsVz5Bas5iqLMDXU
+          SouqdfT1l5rT+cD6hXrro2OsDHHajCrR4Vz/g36wMQ5f9403EjxBdWVs/Ul5n++2
+          E59a08pSBv40DNiqQXDdSWt1cHsA/m7sX7pDatqNEIYg11tgO5sixpdCCz9OakLp
+          r5IO4jodz6OvT3nZ7gH84UfeNXBUjO/BNYhyGGge9TmpRhRM9q8CNpw4LtQFuO4/
+          xcPC3D4Gk0EW83PJorGi1+lPGNusEDO0xqlv2pLyQ07XVKWsYZo3AKQY
+          -----END CERTIFICATE-----
+
+    - name: Should usenet systemd unit file
+      slurp:
+        src: /etc/systemd/system/usenet.service
+      register: usenet_service_file
+      failed_when:
+        not usenet_service_file.content == ( expected_content | b64encode )
+      vars:
+        expected_content: |
+          [Install]
+          WantedBy=multi-user.target
+
+          [Unit]
+          Description=usenet service
+          After=docker.service
+          Requires=docker.service
+
+          [Service]
+          ExecStartPre=-/usr/local/bin/docker-compose \
+            --project-directory /opt/usenet/docker \
+            --file /opt/usenet/docker/docker-compose.yml \
+            --project-name usenet \
+            --env-file /srv/my_usenet/vpn/private/credentials.env \
+            down \
+            --remove-orphans
+
+          ExecStartPre=/usr/local/bin/docker-compose \
+            --project-directory /opt/usenet/docker \
+            --file /opt/usenet/docker/docker-compose.yml \
+            --project-name usenet \
+            --env-file /srv/my_usenet/vpn/private/credentials.env \
+            pull
+
+          ExecStart=/usr/local/bin/docker-compose \
+            --project-directory /opt/usenet/docker \
+            --file /opt/usenet/docker/docker-compose.yml \
+            --project-name usenet \
+            --env-file /srv/my_usenet/vpn/private/credentials.env \
+            up
+
+          ExecStop=/usr/local/bin/docker-compose \
+            --project-directory /opt/usenet/docker \
+            --file /opt/usenet/docker/docker-compose.yml \
+            --project-name usenet \
+            --env-file /srv/my_usenet/vpn/private/credentials.env \
+            down \
+            --remove-orphans
+
+          Restart=always
+          RestartSec=60s
+          TimeoutSec=3600
+
+    - name: Should open 8080/tcp port
+      command: nc -z -w1 localhost 8080
+      changed_when: false
+      register: netcat_8080
+      retries: 300
+      delay: 1
+      until: netcat_8080 is defined
+        and netcat_8080.rc == 0
+      when: not (
+        molecule_docker_environment is defined
+        and molecule_docker_environment | bool
+        )
+
+    - name: Should open 8989/tcp port
+      command: nc -z -w1 localhost 8989
+      changed_when: false
+      register: netcat_8989
+      retries: 300
+      delay: 1
+      until: netcat_8989 is defined
+        and netcat_8989.rc == 0
+      when: not (
+        molecule_docker_environment is defined
+        and molecule_docker_environment | bool
+        )
+
+    - name: Should open 7878/tcp port
+      command: nc -z -w1 localhost 7878
+      changed_when: false
+      register: netcat_7878
+      retries: 300
+      delay: 1
+      until: netcat_7878 is defined
+        and netcat_7878.rc == 0
+      when: not (
+        molecule_docker_environment is defined
+        and molecule_docker_environment | bool
+        )
+
+    - name: Should open 6767/tcp port
+      command: nc -z -w1 localhost 6767
+      changed_when: false
+      register: netcat_6767
+      retries: 300
+      delay: 1
+      until: netcat_6767 is defined
+        and netcat_6767.rc == 0
+      when: not (
+        molecule_docker_environment is defined
+        and molecule_docker_environment | bool
+        )
+
+    - name: Should open 5076/tcp port
+      command: nc -z -w1 localhost 5076
+      changed_when: false
+      register: netcat_5076
+      retries: 300
+      delay: 1
+      until: netcat_5076 is defined
+        and netcat_5076.rc == 0
+      when: not (
+        molecule_docker_environment is defined
+        and molecule_docker_environment | bool
+        )

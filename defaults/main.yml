@@ -10,29 +10,19 @@ usenet_nzbhydra2_version: latest
 usenet_docker_working_directory: /opt/usenet/docker
 usenet_docker_compose_path: "{{ usenet_docker_working_directory }}/docker-compose.yml"
 
-usenet_sabnzbd_volume_directory: /srv/usenet/sabnzbd
-usenet_sabnzbd_config_volume_directory: "{{ usenet_sabnzbd_volume_directory }}/config"
-usenet_sabnzbd_downloads_volume_directory: "{{ usenet_sabnzbd_volume_directory }}/downloads"
-usenet_sabnzbd_incomplete_downloads_volume_directory: "{{ usenet_sabnzbd_volume_directory }}/incomplete-downloads"
+usenet_volume_directory: /srv/usenet
+usenet_config_volume_directory: "{{ usenet_volume_directory }}/config"
 
-usenet_sonarr_volume_directory: /srv/usenet/sonarr
-usenet_sonarr_config_volume_directory: "{{ usenet_sonarr_volume_directory }}/config"
-usenet_sonarr_tv_volume_directory: "{{ usenet_sonarr_volume_directory }}/tv"
-usenet_sonarr_downloads_volume_directory: "{{ usenet_sonarr_volume_directory }}/downloads"
+usenet_sabnzbd_config_volume_directory: "{{ usenet_config_volume_directory }}/sabnzbd"
+usenet_sonarr_config_volume_directory: "{{ usenet_config_volume_directory }}/sonarr"
+usenet_radarr_config_volume_directory: "{{ usenet_config_volume_directory }}/radarr"
+usenet_bazarr_config_volume_directory: "{{ usenet_config_volume_directory }}/bazarr"
+usenet_nzbhydra2_config_volume_directory: "{{ usenet_config_volume_directory }}/nzbhydra2"
 
-usenet_radarr_volume_directory: /srv/usenet/radarr
-usenet_radarr_config_volume_directory: "{{ usenet_radarr_volume_directory }}/config"
-usenet_radarr_movies_volume_directory: "{{ usenet_radarr_volume_directory }}/movies"
-usenet_radarr_downloads_volume_directory: "{{ usenet_radarr_volume_directory }}/downloads"
-
-usenet_bazarr_volume_directory: /srv/usenet/bazarr
-usenet_bazarr_config_volume_directory: "{{ usenet_bazarr_volume_directory }}/config"
-usenet_bazarr_tv_volume_directory: "{{ usenet_bazarr_volume_directory }}/tv"
-usenet_bazarr_movies_volume_directory: "{{ usenet_bazarr_volume_directory }}/movies"
-
-usenet_nzbhydra2_volume_directory: /srv/usenet/nzbhydra2
-usenet_nzbhydra2_config_volume_directory: "{{ usenet_nzbhydra2_volume_directory }}/config"
-usenet_nzbhydra2_downloads_volume_directory: "{{ usenet_nzbhydra2_volume_directory }}/downloads"
+usenet_downloads_volume_directory: "{{ usenet_volume_directory }}/downloads"
+usenet_incomplete_downloads_volume_directory: "{{ usenet_volume_directory }}/incomplete-downloads"
+usenet_tv_volume_directory: "{{ usenet_volume_directory }}/tv"
+usenet_movies_volume_directory: "{{ usenet_volume_directory }}/movies"
 
 usenet_sabnzbd_network_interface: 0.0.0.0
 usenet_sabnzbd_http_port: 8080

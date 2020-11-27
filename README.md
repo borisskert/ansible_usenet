@@ -29,20 +29,15 @@ Installs [`sabnzbd`](https://sabnzbd.org/), [`sonarr`](https://sonarr.tv/), [`ra
 | usenet_bazarr_version  | text | no | latest | bazarr's Docker image version |
 | usenet_nzbhydra2_version | text | no | latest | nzbhydra2's Docker image version |
 | usenet_docker_working_directory | absolute path | no | /opt/usenet/docker | Docker working directory |
-| usenet_sabnzbd_config_volume_directory | absolute path | no | /srv/usenet/sabnzbd/config | sabnzbd config volume directory |
-| usenet_sabnzbd_downloads_volume_directory | absolute path | no | /srv/usenet/sabnzbd/downloads | sabnzbd downloads volume directory |
-| usenet_sabnzbd_incomplete_downloads_volume_directory | absolute path | no | /srv/usenet/sabnzbd/incomplete-downloads | sabnzbd incomplete downloads volume directory |
-| usenet_sonarr_config_volume_directory                | absolute path | no | /srv/usenet/sonarr/config | sonarr config volume directory |
-| usenet_sonarr_tv_volume_directory                    | absolute path | no | /srv/usenet/sonarr/tv | sonarr tv volume directory |
-| usenet_sonarr_downloads_volume_directory             | absolute path | no | /srv/usenet/sonarr/downloads | sonarr downloads volume directory |
-| usenet_radarr_config_volume_directory                | absolute path | no | /srv/usenet/radarr/config | radarr config volume directory |
-| usenet_radarr_movies_volume_directory                | absolute path | no | /srv/usenet/radarr/movies | radarr movies volume directory |
-| usenet_radarr_downloads_volume_directory             | absolute path | no | /srv/usenet/radarr/downloads | radarr downloads volume directory |
-| usenet_bazarr_config_volume_directory                | absolute path | no | /srv/usenet/bazarr/config    | bazarr config volume directory |
-| usenet_bazarr_tv_volume_directory                    | absolute path | no | /srv/usenet/bazarr/tv        | bazarr tv volume directory |
-| usenet_bazarr_movies_volume_directory                | absolute path | no | /srv/usenet/bazarr/movies    | bazarr movies volume directory |
-| usenet_nzbhydra2_config_volume_directory             | absolute path | no | /srv/usenet/nzbhydra2/movies | nzbhydra2 config volume directory |
-| usenet_nzbhydra2_downloads_volume_directory          | absolute path | no | /srv/usenet/nzbhydra2/downloads | nzbhydra2 downloads volume directory |
+| usenet_sabnzbd_config_volume_directory               | absolute path | no | /srv/usenet/sabnzbd/config               | Location where sabnzbd's config will be stored |
+| usenet_sonarr_config_volume_directory                | absolute path | no | /srv/usenet/sonarr/config                | Location where sonarr's config will be stored |
+| usenet_radarr_config_volume_directory                | absolute path | no | /srv/usenet/radarr/config                | Location where radarr's config will be stored |
+| usenet_bazarr_config_volume_directory                | absolute path | no | /srv/usenet/bazarr/config                | Location where bazarr's config will be stored |
+| usenet_nzbhydra2_config_volume_directory             | absolute path | no | /srv/usenet/nzbhydra2/movies             | Location where nzbhydra2's config will be stored |
+| usenet_downloads_volume_directory                    | absolute path | no | /srv/usenet/sabnzbd/downloads            | Location where downloads will be stored |
+| usenet_incomplete_downloads_volume_directory         | absolute path | no | /srv/usenet/sabnzbd/incomplete-downloads | Location where incomplete downloads will be stored |
+| usenet_tv_volume_directory                           | absolute path | no | /srv/usenet/tv                           | Location where tv will be stored |
+| usenet_movies_volume_directory                       | absolute path | no | /srv/usenet/movies                       | Location where movies will be stored |
 | usenet_sabnzbd_network_interface                     | network address | no | 0.0.0.0 | Bound network interface for sabnzbd's web-interface |
 | usenet_sabnzbd_http_port                             | network port    | no | 8080    | Network port for sabnzbd's http web-interface |
 | usenet_sabnzbd_https_port                            | network port    | no | 9090    | Network port for sabnzbd's httpd web-interface |
@@ -91,20 +86,15 @@ Installs [`sabnzbd`](https://sabnzbd.org/), [`sonarr`](https://sonarr.tv/), [`ra
       usenet_bazarr_http_port: 6767
       usenet_nzbhydra2_network_interface: 0.0.0.0
       usenet_nzbhydra2_http_port: 5076
-      usenet_sabnzbd_config_volume_directory: /srv/usenet/sabnzbd/config
-      usenet_sabnzbd_downloads_volume_directory: /srv/usenet/sabnzbd/downloads
-      usenet_sabnzbd_incomplete_downloads_volume_directory: /srv/usenet/sabnzbd/incomplete-downloads
-      usenet_sonarr_config_volume_directory: /srv/usenet/sonarr/config
-      usenet_sonarr_tv_volume_directory: /srv/usenet/sonarr/tv
-      usenet_sonarr_downloads_volume_directory: /srv/usenet/sonarr/downloads
-      usenet_radarr_config_volume_directory: /srv/usenet/radarr/config
-      usenet_radarr_movies_volume_directory: /srv/usenet/radarr/movies
-      usenet_radarr_downloads_volume_directory: /srv/usenet/radarr/downloads
-      usenet_bazarr_config_volume_directory: /srv/usenet/bazarr/config
-      usenet_bazarr_tv_volume_directory: /srv/usenet/bazarr/tv
-      usenet_bazarr_movies_volume_directory: /srv/usenet/bazarr/movies
-      usenet_nzbhydra2_config_volume_directory: /srv/usenet/nzbhydra2/config
-      usenet_nzbhydra2_downloads_volume_directory: /srv/usenet/nzbhydra2/downloads
+      usenet_sabnzbd_config_volume_directory: /srv/usenet/config/sabnzbd
+      usenet_sonarr_config_volume_directory: /srv/usenet/config/sonarr
+      usenet_radarr_config_volume_directory: /srv/usenet/config/radarr
+      usenet_bazarr_config_volume_directory: /srv/usenet/config/bazarr
+      usenet_nzbhydra2_config_volume_directory: /srv/usenet/config/nzbhydra2
+      usenet_downloads_volume_directory: /srv/usenet/downloads
+      usenet_incomplete_downloads_volume_directory: /srv/usenet/incomplete-downloads
+      usenet_tv_volume_directory: /srv/usenet/tv
+      usenet_movies_volume_directory: /srv/usenet/movies
       usenet_user_id: 666
       usenet_group_id: 666
 ```
@@ -124,7 +114,7 @@ Requirements:
 ### Run within docker
 
 ```shell script
-molecule test --scenario-name docker-default && molecule test --scenario-name docker-all-parameters && molecule test -s docker-with-vpn
+molecule test --scenario-name docker-default && molecule test --scenario-name docker-all-parameters && molecule test -s docker-with-vpn && molecule test -s docker-with-and-all-parameters
 ```
 
 ### Run within Vagrant

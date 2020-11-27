@@ -25,9 +25,9 @@
                 - TZ=Europe/London
                 - UMASK_SET=022
               volumes:
-                - /srv/my_usenet/sabnzbd/config:/config
-                - /srv/my_usenet/sabnzbd/downloads:/downloads
-                - /srv/my_usenet/sabnzbd/incomplete-downloads:/incomplete-downloads
+                - /srv/my_usenet/config/sabnzbd:/config
+                - /srv/my_usenet/downloads:/downloads
+                - /srv/my_usenet/incomplete-downloads:/incomplete-downloads
               restart: unless-stopped
 
             sonarr:
@@ -42,9 +42,9 @@
               depends_on:
                 - sabnzbd
               volumes:
-                - /srv/my_usenet/sonarr/config:/config
-                - /srv/my_usenet/sonarr/tv:/tv
-                - /srv/my_usenet/sonarr/downloads:/downloads
+                - /srv/my_usenet/config/sonarr:/config
+                - /srv/my_usenet/tv:/tv
+                - /srv/my_usenet/downloads:/downloads
               restart: unless-stopped
 
             radarr:
@@ -57,9 +57,9 @@
                 - TZ=Europe/London
                 - UMASK_SET=022
               volumes:
-                - /srv/my_usenet/radarr/config:/config
-                - /srv/my_usenet/radarr/movies:/movies
-                - /srv/my_usenet/radarr/downloads:/downloads
+                - /srv/my_usenet/config/radarr:/config
+                - /srv/my_usenet/movies:/movies
+                - /srv/my_usenet/downloads:/downloads
               restart: unless-stopped
 
             bazarr:
@@ -72,9 +72,9 @@
                 - TZ=Europe/London
                 - UMASK_SET=022
               volumes:
-                - /srv/my_usenet/bazarr/config:/config
-                - /srv/my_usenet/bazarr/movies:/movies
-                - /srv/my_usenet/bazarr/tv:/tv
+                - /srv/my_usenet/config/bazarr:/config
+                - /srv/my_usenet/movies:/movies
+                - /srv/my_usenet/tv:/tv
               restart: unless-stopped
 
             nzbhydra2:
@@ -86,8 +86,8 @@
                 - PGID=888
                 - TZ=Europe/London
               volumes:
-                - /srv/my_usenet/nzbhydra2/config:/config
-                - /srv/my_usenet/nzbhydra2/downloads:/downloads
+                - /srv/my_usenet/config/nzbhydra2:/config
+                - /srv/my_usenet/downloads:/downloads
               restart: unless-stopped
 
             vpn:
@@ -111,7 +111,7 @@
 
     - name: Should create sabnzbd config volume
       stat:
-        path: /srv/my_usenet/sabnzbd/config
+        path: /srv/my_usenet/config/sabnzbd
       register: sabnzbd_config_volume_directory
       failed_when: not (
         sabnzbd_config_volume_directory.stat.exists
@@ -120,31 +120,9 @@
         and sabnzbd_config_volume_directory.stat.mode == '0750'
         )
 
-    - name: Should create sabnzbd downloads volume
-      stat:
-        path: /srv/my_usenet/sabnzbd/downloads
-      register: sabnzbd_downloads_volume_directory
-      failed_when: not (
-        sabnzbd_downloads_volume_directory.stat.exists
-        and sabnzbd_downloads_volume_directory.stat.uid == 777
-        and sabnzbd_downloads_volume_directory.stat.gid == 888
-        and sabnzbd_downloads_volume_directory.stat.mode == '0750'
-        )
-
-    - name: Should create sabnzbd incomplete downloads volume
-      stat:
-        path: /srv/my_usenet/sabnzbd/downloads
-      register: sabnzbd_incomplete_downloads_volume_directory
-      failed_when: not (
-        sabnzbd_incomplete_downloads_volume_directory.stat.exists
-        and sabnzbd_incomplete_downloads_volume_directory.stat.uid == 777
-        and sabnzbd_incomplete_downloads_volume_directory.stat.gid == 888
-        and sabnzbd_incomplete_downloads_volume_directory.stat.mode == '0750'
-        )
-
     - name: Should create sonarr config volume
       stat:
-        path: /srv/my_usenet/sonarr/config
+        path: /srv/my_usenet/config/sonarr
       register: sonarr_config_volume_directory
       failed_when: not (
         sonarr_config_volume_directory.stat.exists
@@ -153,31 +131,9 @@
         and sonarr_config_volume_directory.stat.mode == '0750'
         )
 
-    - name: Should create sonarr tv volume
-      stat:
-        path: /srv/my_usenet/sonarr/tv
-      register: sonarr_tv_volume_directory
-      failed_when: not (
-        sonarr_tv_volume_directory.stat.exists
-        and sonarr_tv_volume_directory.stat.uid == 777
-        and sonarr_tv_volume_directory.stat.gid == 888
-        and sonarr_tv_volume_directory.stat.mode == '0750'
-        )
-
-    - name: Should create sonarr downloads volume
-      stat:
-        path: /srv/my_usenet/sonarr/downloads
-      register: sonarr_downloads_volume_directory
-      failed_when: not (
-        sonarr_downloads_volume_directory.stat.exists
-        and sonarr_downloads_volume_directory.stat.uid == 777
-        and sonarr_downloads_volume_directory.stat.gid == 888
-        and sonarr_downloads_volume_directory.stat.mode == '0750'
-        )
-
     - name: Should create radarr config volume
       stat:
-        path: /srv/my_usenet/radarr/config
+        path: /srv/my_usenet/config/radarr
       register: radarr_config_volume_directory
       failed_when: not (
         radarr_config_volume_directory.stat.exists
@@ -186,31 +142,9 @@
         and radarr_config_volume_directory.stat.mode == '0750'
         )
 
-    - name: Should create radarr movies volume
-      stat:
-        path: /srv/my_usenet/radarr/movies
-      register: radarr_movies_volume_directory
-      failed_when: not (
-        radarr_movies_volume_directory.stat.exists
-        and radarr_movies_volume_directory.stat.uid == 777
-        and radarr_movies_volume_directory.stat.gid == 888
-        and radarr_movies_volume_directory.stat.mode == '0750'
-        )
-
-    - name: Should create radarr downloads volume
-      stat:
-        path: /srv/my_usenet/radarr/downloads
-      register: radarr_downloads_volume_directory
-      failed_when: not (
-        radarr_downloads_volume_directory.stat.exists
-        and radarr_downloads_volume_directory.stat.uid == 777
-        and radarr_downloads_volume_directory.stat.gid == 888
-        and radarr_downloads_volume_directory.stat.mode == '0750'
-        )
-
     - name: Should create bazarr config volume
       stat:
-        path: /srv/my_usenet/bazarr/config
+        path: /srv/my_usenet/config/bazarr
       register: bazarr_config_volume_directory
       failed_when: not (
         bazarr_config_volume_directory.stat.exists
@@ -219,31 +153,9 @@
         and bazarr_config_volume_directory.stat.mode == '0750'
         )
 
-    - name: Should create bazarr tv volume
-      stat:
-        path: /srv/my_usenet/bazarr/tv
-      register: bazarr_tv_volume_directory
-      failed_when: not (
-        bazarr_tv_volume_directory.stat.exists
-        and bazarr_tv_volume_directory.stat.uid == 777
-        and bazarr_tv_volume_directory.stat.gid == 888
-        and bazarr_tv_volume_directory.stat.mode == '0750'
-        )
-
-    - name: Should create bazarr movies volume
-      stat:
-        path: /srv/my_usenet/bazarr/movies
-      register: bazarr_movies_volume_directory
-      failed_when: not (
-        bazarr_movies_volume_directory.stat.exists
-        and bazarr_movies_volume_directory.stat.uid == 777
-        and bazarr_movies_volume_directory.stat.gid == 888
-        and bazarr_movies_volume_directory.stat.mode == '0750'
-        )
-
     - name: Should create nzbhydra2 config volume
       stat:
-        path: /srv/my_usenet/nzbhydra2/config
+        path: /srv/my_usenet/config/nzbhydra2
       register: nzbhydra2_config_volume_directory
       failed_when: not (
         nzbhydra2_config_volume_directory.stat.exists
@@ -252,15 +164,48 @@
         and nzbhydra2_config_volume_directory.stat.mode == '0750'
         )
 
-    - name: Should create nzbhydra2 downloads volume
+    - name: Should create downloads volume
       stat:
-        path: /srv/my_usenet/nzbhydra2/downloads
-      register: nzbhydra2_downloads_volume_directory
+        path: /srv/my_usenet/downloads
+      register: downloads_volume_directory
       failed_when: not (
-        nzbhydra2_downloads_volume_directory.stat.exists
-        and nzbhydra2_downloads_volume_directory.stat.uid == 777
-        and nzbhydra2_downloads_volume_directory.stat.gid == 888
-        and nzbhydra2_downloads_volume_directory.stat.mode == '0750'
+        downloads_volume_directory.stat.exists
+        and downloads_volume_directory.stat.uid == 777
+        and downloads_volume_directory.stat.gid == 888
+        and downloads_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create incomplete downloads volume
+      stat:
+        path: /srv/my_usenet/incomplete-downloads
+      register: incomplete_downloads_volume_directory
+      failed_when: not (
+        incomplete_downloads_volume_directory.stat.exists
+        and incomplete_downloads_volume_directory.stat.uid == 777
+        and incomplete_downloads_volume_directory.stat.gid == 888
+        and incomplete_downloads_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create tv volume
+      stat:
+        path: /srv/my_usenet/tv
+      register: tv_volume_directory
+      failed_when: not (
+        tv_volume_directory.stat.exists
+        and tv_volume_directory.stat.uid == 777
+        and tv_volume_directory.stat.gid == 888
+        and tv_volume_directory.stat.mode == '0755'
+        )
+
+    - name: Should create movies volume
+      stat:
+        path: /srv/my_usenet/movies
+      register: radarr_movies_volume_directory
+      failed_when: not (
+        radarr_movies_volume_directory.stat.exists
+        and radarr_movies_volume_directory.stat.uid == 777
+        and radarr_movies_volume_directory.stat.gid == 888
+        and radarr_movies_volume_directory.stat.mode == '0755'
         )
 
     - name: Should create vpn config volume

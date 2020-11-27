@@ -21,19 +21,14 @@
       usenet_bazarr_http_port: 16767
       usenet_nzbhydra2_network_interface: 127.0.0.1
       usenet_nzbhydra2_http_port: 15076
-      usenet_sabnzbd_config_volume_directory: /srv/my_usenet/sabnzbd/config
-      usenet_sabnzbd_downloads_volume_directory: /srv/my_usenet/sabnzbd/downloads
-      usenet_sabnzbd_incomplete_downloads_volume_directory: /srv/my_usenet/sabnzbd/incomplete-downloads
-      usenet_sonarr_config_volume_directory: /srv/my_usenet/sonarr/config
-      usenet_sonarr_tv_volume_directory: /srv/my_usenet/sonarr/tv
-      usenet_sonarr_downloads_volume_directory: /srv/my_usenet/sonarr/downloads
-      usenet_radarr_config_volume_directory: /srv/my_usenet/radarr/config
-      usenet_radarr_movies_volume_directory: /srv/my_usenet/radarr/movies
-      usenet_radarr_downloads_volume_directory: /srv/my_usenet/radarr/downloads
-      usenet_bazarr_config_volume_directory: /srv/my_usenet/bazarr/config
-      usenet_bazarr_tv_volume_directory: /srv/my_usenet/bazarr/tv
-      usenet_bazarr_movies_volume_directory: /srv/my_usenet/bazarr/movies
-      usenet_nzbhydra2_config_volume_directory: /srv/my_usenet/nzbhydra2/config
-      usenet_nzbhydra2_downloads_volume_directory: /srv/my_usenet/nzbhydra2/downloads
+      usenet_sabnzbd_config_volume_directory: /srv/my_usenet/config/sabnzbd
+      usenet_sonarr_config_volume_directory: /srv/my_usenet/config/sonarr
+      usenet_radarr_config_volume_directory: /srv/my_usenet/config/radarr
+      usenet_bazarr_config_volume_directory: /srv/my_usenet/config/bazarr
+      usenet_nzbhydra2_config_volume_directory: /srv/my_usenet/config/nzbhydra2
+      usenet_downloads_volume_directory: /srv/my_usenet/downloads
+      usenet_incomplete_downloads_volume_directory: /srv/my_usenet/incomplete-downloads
+      usenet_tv_volume_directory: /srv/my_usenet/tv
+      usenet_movies_volume_directory: /srv/my_usenet/movies
       usenet_user_id: 777
       usenet_group_id: 888

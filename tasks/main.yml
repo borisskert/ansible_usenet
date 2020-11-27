@@ -15,16 +15,17 @@
     group: "{{ usenet_group_id | int }}"
     mode: 0750
 
-- name: create sabnzbd downloads volume directory
+- name: create downloads volume directory
   file:
-    path: "{{ usenet_sabnzbd_downloads_volume_directory }}"
+    path: "{{ usenet_downloads_volume_directory }}"
     state: directory
     owner: "{{ usenet_user_id | int }}"
     group: "{{ usenet_group_id | int }}"
     mode: 0750
-- name: create sabnzbd incomplete downloads volume directory
+
+- name: create incomplete downloads volume directory
   file:
-    path: "{{ usenet_sabnzbd_incomplete_downloads_volume_directory }}"
+    path: "{{ usenet_incomplete_downloads_volume_directory }}"
     state: directory
     owner: "{{ usenet_user_id | int }}"
     group: "{{ usenet_group_id | int }}"
@@ -38,41 +39,9 @@
     group: "{{ usenet_group_id | int }}"
     mode: 0750
 
-- name: create sonarr tv volume directory
-  file:
-    path: "{{ usenet_sonarr_tv_volume_directory }}"
-    state: directory
-    owner: "{{ usenet_user_id | int }}"
-    group: "{{ usenet_group_id | int }}"
-    mode: 0750
-
-- name: create sonarr downloads volume directory
-  file:
-    path: "{{ usenet_sonarr_downloads_volume_directory }}"
-    state: directory
-    owner: "{{ usenet_user_id | int }}"
-    group: "{{ usenet_group_id | int }}"
-    mode: 0750
-
 - name: create radarr config volume directory
   file:
     path: "{{ usenet_radarr_config_volume_directory }}"
-    state: directory
-    owner: "{{ usenet_user_id | int }}"
-    group: "{{ usenet_group_id | int }}"
-    mode: 0750
-
-- name: create radarr movies volume directory
-  file:
-    path: "{{ usenet_radarr_movies_volume_directory }}"
-    state: directory
-    owner: "{{ usenet_user_id | int }}"
-    group: "{{ usenet_group_id | int }}"
-    mode: 0750
-
-- name: create radarr downloads volume directory
-  file:
-    path: "{{ usenet_radarr_downloads_volume_directory }}"
     state: directory
     owner: "{{ usenet_user_id | int }}"
     group: "{{ usenet_group_id | int }}"
@@ -86,33 +55,25 @@
     group: "{{ usenet_group_id | int }}"
     mode: 0750
 
-- name: create bazarr tv volume directory
+- name: create tv volume directory
   file:
-    path: "{{ usenet_bazarr_tv_volume_directory }}"
+    path: "{{ usenet_tv_volume_directory }}"
     state: directory
     owner: "{{ usenet_user_id | int }}"
     group: "{{ usenet_group_id | int }}"
-    mode: 0750
+    mode: 0755
 
-- name: create bazarr movies volume directory
+- name: create movies volume directory
   file:
-    path: "{{ usenet_bazarr_movies_volume_directory }}"
+    path: "{{ usenet_movies_volume_directory }}"
     state: directory
     owner: "{{ usenet_user_id | int }}"
     group: "{{ usenet_group_id | int }}"
-    mode: 0750
+    mode: 0755
 
 - name: create nzbhydra2 config volume directory
   file:
     path: "{{ usenet_nzbhydra2_config_volume_directory }}"
-    state: directory
-    owner: "{{ usenet_user_id | int }}"
-    group: "{{ usenet_group_id | int }}"
-    mode: 0750
-
-- name: create nzbhydra2 downloads volume directory
-  file:
-    path: "{{ usenet_nzbhydra2_downloads_volume_directory }}"
     state: directory
     owner: "{{ usenet_user_id | int }}"
     group: "{{ usenet_group_id | int }}"

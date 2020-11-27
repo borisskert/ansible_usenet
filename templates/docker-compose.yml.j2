@@ -14,8 +14,8 @@ services:
       - UMASK_SET=022
     volumes:
       - {{ usenet_sabnzbd_config_volume_directory }}:/config
-      - {{ usenet_sabnzbd_downloads_volume_directory }}:/downloads
-      - {{ usenet_sabnzbd_incomplete_downloads_volume_directory }}:/incomplete-downloads
+      - {{ usenet_downloads_volume_directory }}:/downloads
+      - {{ usenet_incomplete_downloads_volume_directory }}:/incomplete-downloads
 {% if usenet_vpn_enabled is not defined or usenet_vpn_enabled | bool == false %}
     ports:
       - {{ usenet_sabnzbd_network_interface }}:{{ usenet_sabnzbd_http_port }}:8080
@@ -38,8 +38,8 @@ services:
       - sabnzbd
     volumes:
       - {{ usenet_sonarr_config_volume_directory }}:/config
-      - {{ usenet_sonarr_tv_volume_directory }}:/tv
-      - {{ usenet_sonarr_downloads_volume_directory }}:/downloads
+      - {{ usenet_tv_volume_directory }}:/tv
+      - {{ usenet_downloads_volume_directory }}:/downloads
 {% if usenet_vpn_enabled is not defined or usenet_vpn_enabled | bool == false %}
     ports:
       - {{ usenet_sonarr_network_interface }}:{{ usenet_sonarr_http_port }}:8989
@@ -59,8 +59,8 @@ services:
       - UMASK_SET=022
     volumes:
       - {{ usenet_radarr_config_volume_directory }}:/config
-      - {{ usenet_radarr_movies_volume_directory }}:/movies
-      - {{ usenet_radarr_downloads_volume_directory }}:/downloads
+      - {{ usenet_movies_volume_directory }}:/movies
+      - {{ usenet_downloads_volume_directory }}:/downloads
 {% if usenet_vpn_enabled is not defined or usenet_vpn_enabled | bool == false %}
     ports:
       - {{ usenet_radarr_network_interface }}:{{ usenet_radarr_http_port }}:7878
@@ -80,8 +80,8 @@ services:
       - UMASK_SET=022
     volumes:
       - {{ usenet_bazarr_config_volume_directory }}:/config
-      - {{ usenet_bazarr_movies_volume_directory }}:/movies
-      - {{ usenet_bazarr_tv_volume_directory }}:/tv
+      - {{ usenet_movies_volume_directory }}:/movies
+      - {{ usenet_tv_volume_directory }}:/tv
 {% if usenet_vpn_enabled is not defined or usenet_vpn_enabled | bool == false %}
     ports:
       - {{ usenet_bazarr_network_interface }}:{{ usenet_bazarr_http_port }}:6767
@@ -100,7 +100,7 @@ services:
       - TZ=Europe/London
     volumes:
       - {{ usenet_nzbhydra2_config_volume_directory }}:/config
-      - {{ usenet_nzbhydra2_downloads_volume_directory }}:/downloads
+      - {{ usenet_downloads_volume_directory }}:/downloads
 {% if usenet_vpn_enabled is not defined or usenet_vpn_enabled | bool == false %}
     ports:
       - {{ usenet_nzbhydra2_network_interface }}:{{ usenet_nzbhydra2_http_port }}:5076

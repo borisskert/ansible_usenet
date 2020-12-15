@@ -21,19 +21,19 @@ jobs:
       - name: Run default tests
         uses: borisskert/molecule-action@v20.11.09
         with:
-          arguments: test --scenario-name docker-default
+          arguments: test
 
       - name: Run tests 'all-parameters'
         uses: borisskert/molecule-action@v20.11.09
         with:
-          arguments: test --scenario-name docker-all-parameters
+          arguments: test --scenario-name all-parameters
 
       - name: Run tests 'with-vpn'
         uses: borisskert/molecule-action@v20.11.09
         with:
-          arguments: test --scenario-name docker-with-vpn
+          arguments: test --scenario-name with-vpn
 
       - name: Run tests 'with-vpn-and-all-parameters'
         uses: borisskert/molecule-action@v20.11.09
         with:
-          arguments: test --scenario-name docker-with-vpn-and-all-parameters
+          arguments: test --scenario-name with-vpn-and-all-parameters

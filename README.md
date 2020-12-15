@@ -40,7 +40,7 @@ Installs [`sabnzbd`](https://sabnzbd.org/), [`sonarr`](https://sonarr.tv/), [`ra
 | usenet_movies_volume_directory                       | absolute path | no | /srv/usenet/movies                       | Location where movies will be stored |
 | usenet_sabnzbd_network_interface                     | network address | no | 0.0.0.0 | Bound network interface for sabnzbd's web-interface |
 | usenet_sabnzbd_http_port                             | network port    | no | 8080    | Network port for sabnzbd's http web-interface |
-| usenet_sabnzbd_https_port                            | network port    | no | 9090    | Network port for sabnzbd's httpd web-interface |
+| usenet_sabnzbd_https_port                            | network port    | no | 9090    | Network port for sabnzbd's https web-interface |
 | usenet_sonarr_network_interface                      | network address | no | 0.0.0.0 | Bound network interface for sonarr's web-interface |
 | usenet_sonarr_http_port                              | network port    | no | 8989    | Network port for sonarr's http web-interface |
 | usenet_radarr_network_interface                      | network address | no | 0.0.0.0 | Bound network interface for radarr's web-interface |

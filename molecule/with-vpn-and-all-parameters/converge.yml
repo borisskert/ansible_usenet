@@ -8,6 +8,7 @@
       usenet_sabnzbd_version: version-3.1.1
       usenet_sonarr_version: version-2.0.0.5344
       usenet_radarr_version: version-3.0.0.4127
+      usenet_lidarr_version: version-0.8.0.1928
       usenet_bazarr_version: version-v0.9.0.6
       usenet_nzbhydra2_version: version-v3.5.1
       usenet_sabnzbd_network_interface: 127.0.0.1
@@ -17,6 +18,8 @@
       usenet_sonarr_http_port: 18989
       usenet_radarr_network_interface: 127.0.0.1
       usenet_radarr_http_port: 17878
+      usenet_lidarr_network_interface: 127.0.0.1
+      usenet_lidarr_http_port: 18686
       usenet_bazarr_network_interface: 127.0.0.1
       usenet_bazarr_http_port: 16767
       usenet_nzbhydra2_network_interface: 127.0.0.1
@@ -24,12 +27,14 @@
       usenet_sabnzbd_config_volume_directory: /srv/my_usenet/config/sabnzbd
       usenet_sonarr_config_volume_directory: /srv/my_usenet/config/sonarr
       usenet_radarr_config_volume_directory: /srv/my_usenet/config/radarr
+      usenet_lidarr_config_volume_directory: /srv/my_usenet/config/lidarr
       usenet_bazarr_config_volume_directory: /srv/my_usenet/config/bazarr
       usenet_nzbhydra2_config_volume_directory: /srv/my_usenet/config/nzbhydra2
       usenet_downloads_volume_directory: /srv/my_usenet/downloads
       usenet_incomplete_downloads_volume_directory: /srv/my_usenet/incomplete-downloads
       usenet_tv_volume_directory: /srv/my_usenet/tv
       usenet_movies_volume_directory: /srv/my_usenet/movies
+      usenet_music_volume_directory: /srv/my_usenet/music
       usenet_user_id: 777
       usenet_group_id: 888
       usenet_vpn_enabled: true

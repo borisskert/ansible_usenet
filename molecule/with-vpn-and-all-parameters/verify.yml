@@ -62,6 +62,21 @@
                 - /srv/my_usenet/downloads:/downloads
               restart: unless-stopped
 
+            lidarr:
+              image: ghcr.io/linuxserver/lidarr:version-0.8.0.1928
+              container_name: lidarr
+              network_mode: service:vpn
+              environment:
+                - PUID=777
+                - PGID=888
+                - TZ=Europe/London
+                - UMASK_SET=022
+              volumes:
+                - /srv/my_usenet/config/lidarr:/config
+                - /srv/my_usenet/music:/music
+                - /srv/my_usenet/downloads:/downloads
+              restart: unless-stopped
+
             bazarr:
               image: ghcr.io/linuxserver/bazarr:version-v0.9.0.6
               container_name: bazarr
@@ -104,6 +119,7 @@
                 - 127.0.0.1:19090:9090
                 - 127.0.0.1:18989:8989
                 - 127.0.0.1:17878:7878
+                - 127.0.0.1:18686:8686
                 - 127.0.0.1:16767:6767
                 - 127.0.0.1:15076:5076
               command: ["-v", "my.vpn.server;${USERNAME};${PASSWORD}"]
@@ -140,6 +156,17 @@
         and radarr_config_volume_directory.stat.uid == 777
         and radarr_config_volume_directory.stat.gid == 888
         and radarr_config_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create lidarr config volume
+      stat:
+        path: /srv/my_usenet/config/lidarr
+      register: lidarr_config_volume_directory
+      failed_when: not (
+        lidarr_config_volume_directory.stat.exists
+        and lidarr_config_volume_directory.stat.uid == 777
+        and lidarr_config_volume_directory.stat.gid == 888
+        and lidarr_config_volume_directory.stat.mode == '0750'
         )
 
     - name: Should create bazarr config volume
@@ -200,12 +227,23 @@
     - name: Should create movies volume
       stat:
         path: /srv/my_usenet/movies
-      register: radarr_movies_volume_directory
+      register: movies_volume_directory
       failed_when: not (
-        radarr_movies_volume_directory.stat.exists
-        and radarr_movies_volume_directory.stat.uid == 777
-        and radarr_movies_volume_directory.stat.gid == 888
-        and radarr_movies_volume_directory.stat.mode == '0755'
+        movies_volume_directory.stat.exists
+        and movies_volume_directory.stat.uid == 777
+        and movies_volume_directory.stat.gid == 888
+        and movies_volume_directory.stat.mode == '0755'
+        )
+
+    - name: Should create music volume
+      stat:
+        path: /srv/my_usenet/music
+      register: music_volume_directory
+      failed_when: not (
+        music_volume_directory.stat.exists
+        and music_volume_directory.stat.uid == 777
+        and music_volume_directory.stat.gid == 888
+        and music_volume_directory.stat.mode == '0755'
         )
 
     - name: Should create vpn config volume
@@ -328,66 +366,79 @@
           RestartSec=60s
           TimeoutSec=3600
 
-    - name: Should open 8080/tcp port
-      command: nc -z -w1 localhost 8080
+    - name: Should open 18080/tcp port
+      command: nc -z -w1 localhost 18080
       changed_when: false
-      register: netcat_8080
+      register: netcat_18080
       retries: 300
       delay: 1
-      until: netcat_8080 is defined
-        and netcat_8080.rc == 0
+      until: netcat_18080 is defined
+        and netcat_18080.rc == 0
       when: not (
         molecule_docker_environment is defined
         and molecule_docker_environment | bool
         )
 
-    - name: Should open 8989/tcp port
-      command: nc -z -w1 localhost 8989
+    - name: Should open 18989/tcp port
+      command: nc -z -w1 localhost 18989
       changed_when: false
-      register: netcat_8989
+      register: netcat_18989
       retries: 300
       delay: 1
-      until: netcat_8989 is defined
-        and netcat_8989.rc == 0
+      until: netcat_18989 is defined
+        and netcat_18989.rc == 0
       when: not (
         molecule_docker_environment is defined
         and molecule_docker_environment | bool
         )
 
-    - name: Should open 7878/tcp port
-      command: nc -z -w1 localhost 7878
+    - name: Should open 17878/tcp port
+      command: nc -z -w1 localhost 17878
       changed_when: false
-      register: netcat_7878
+      register: netcat_17878
       retries: 300
       delay: 1
-      until: netcat_7878 is defined
-        and netcat_7878.rc == 0
+      until: netcat_17878 is defined
+        and netcat_17878.rc == 0
       when: not (
         molecule_docker_environment is defined
         and molecule_docker_environment | bool
         )
 
-    - name: Should open 6767/tcp port
-      command: nc -z -w1 localhost 6767
+    - name: Should open 18686/tcp port
+      command: nc -z -w1 localhost 18686
       changed_when: false
-      register: netcat_6767
+      register: netcat_18686
       retries: 300
       delay: 1
-      until: netcat_6767 is defined
-        and netcat_6767.rc == 0
+      until: netcat_18686 is defined
+        and netcat_18686.rc == 0
       when: not (
         molecule_docker_environment is defined
         and molecule_docker_environment | bool
         )
 
-    - name: Should open 5076/tcp port
-      command: nc -z -w1 localhost 5076
+    - name: Should open 16767/tcp port
+      command: nc -z -w1 localhost 16767
       changed_when: false
-      register: netcat_5076
+      register: netcat_16767
       retries: 300
       delay: 1
-      until: netcat_5076 is defined
-        and netcat_5076.rc == 0
+      until: netcat_16767 is defined
+        and netcat_16767.rc == 0
+      when: not (
+        molecule_docker_environment is defined
+        and molecule_docker_environment | bool
+        )
+
+    - name: Should open 15076/tcp port
+      command: nc -z -w1 localhost 15076
+      changed_when: false
+      register: netcat_15076
+      retries: 300
+      delay: 1
+      until: netcat_15076 is defined
+        and netcat_15076.rc == 0
       when: not (
         molecule_docker_environment is defined
         and molecule_docker_environment | bool

@@ -4,6 +4,7 @@ usenet_service_name: usenet
 usenet_sabnzbd_version: latest
 usenet_sonarr_version: latest
 usenet_radarr_version: latest
+usenet_lidarr_version: latest
 usenet_bazarr_version: latest
 usenet_nzbhydra2_version: latest
 
@@ -16,6 +17,7 @@ usenet_config_volume_directory: "{{ usenet_volume_directory }}/config"
 usenet_sabnzbd_config_volume_directory: "{{ usenet_config_volume_directory }}/sabnzbd"
 usenet_sonarr_config_volume_directory: "{{ usenet_config_volume_directory }}/sonarr"
 usenet_radarr_config_volume_directory: "{{ usenet_config_volume_directory }}/radarr"
+usenet_lidarr_config_volume_directory: "{{ usenet_config_volume_directory }}/lidarr"
 usenet_bazarr_config_volume_directory: "{{ usenet_config_volume_directory }}/bazarr"
 usenet_nzbhydra2_config_volume_directory: "{{ usenet_config_volume_directory }}/nzbhydra2"
 
@@ -23,6 +25,7 @@ usenet_downloads_volume_directory: "{{ usenet_volume_directory }}/downloads"
 usenet_incomplete_downloads_volume_directory: "{{ usenet_volume_directory }}/incomplete-downloads"
 usenet_tv_volume_directory: "{{ usenet_volume_directory }}/tv"
 usenet_movies_volume_directory: "{{ usenet_volume_directory }}/movies"
+usenet_music_volume_directory: "{{ usenet_volume_directory }}/music"
 
 usenet_sabnzbd_network_interface: 0.0.0.0
 usenet_sabnzbd_http_port: 8080
@@ -33,6 +36,9 @@ usenet_sonarr_http_port: 8989
 
 usenet_radarr_network_interface: 0.0.0.0
 usenet_radarr_http_port: 7878
+
+usenet_lidarr_network_interface: 0.0.0.0
+usenet_lidarr_http_port: 8686
 
 usenet_bazarr_network_interface: 0.0.0.0
 usenet_bazarr_http_port: 6767

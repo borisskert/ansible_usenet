@@ -62,6 +62,21 @@
                 - /srv/usenet/downloads:/downloads
               restart: unless-stopped
 
+            lidarr:
+              image: ghcr.io/linuxserver/lidarr:latest
+              container_name: lidarr
+              network_mode: service:vpn
+              environment:
+                - PUID=666
+                - PGID=666
+                - TZ=Europe/London
+                - UMASK_SET=022
+              volumes:
+                - /srv/usenet/config/lidarr:/config
+                - /srv/usenet/music:/music
+                - /srv/usenet/downloads:/downloads
+              restart: unless-stopped
+
             bazarr:
               image: ghcr.io/linuxserver/bazarr:latest
               container_name: bazarr
@@ -104,6 +119,7 @@
                 - 0.0.0.0:9090:9090
                 - 0.0.0.0:8989:8989
                 - 0.0.0.0:7878:7878
+                - 0.0.0.0:8686:8686
                 - 0.0.0.0:6767:6767
                 - 0.0.0.0:5076:5076
               command: ["-v", "vpn.server;${USERNAME};${PASSWORD}"]
@@ -140,6 +156,17 @@
         and radarr_config_volume_directory.stat.uid == 666
         and radarr_config_volume_directory.stat.gid == 666
         and radarr_config_volume_directory.stat.mode == '0750'
+        )
+
+    - name: Should create lidarr config volume
+      stat:
+        path: /srv/usenet/config/lidarr
+      register: lidarr_config_volume_directory
+      failed_when: not (
+        lidarr_config_volume_directory.stat.exists
+        and lidarr_config_volume_directory.stat.uid == 666
+        and lidarr_config_volume_directory.stat.gid == 666
+        and lidarr_config_volume_directory.stat.mode == '0750'
         )
 
     - name: Should create bazarr config volume
@@ -206,6 +233,17 @@
         and movies_volume_directory.stat.uid == 666
         and movies_volume_directory.stat.gid == 666
         and movies_volume_directory.stat.mode == '0755'
+        )
+
+    - name: Should create music volume
+      stat:
+        path: /srv/usenet/music
+      register: music_volume_directory
+      failed_when: not (
+        music_volume_directory.stat.exists
+        and music_volume_directory.stat.uid == 666
+        and music_volume_directory.stat.gid == 666
+        and music_volume_directory.stat.mode == '0755'
         )
 
     - name: Should create vpn config volume
@@ -362,6 +400,19 @@
       delay: 1
       until: netcat_7878 is defined
         and netcat_7878.rc == 0
+      when: not (
+        molecule_docker_environment is defined
+        and molecule_docker_environment | bool
+        )
+
+    - name: Should open 8686/tcp port
+      command: nc -z -w1 localhost 8686
+      changed_when: false
+      register: netcat_8686
+      retries: 300
+      delay: 1
+      until: netcat_8686 is defined
+        and netcat_8686.rc == 0
       when: not (
         molecule_docker_environment is defined
         and molecule_docker_environment | bool

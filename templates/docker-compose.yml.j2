@@ -67,6 +67,27 @@ services:
 {% endif %}
     restart: unless-stopped
 
+  lidarr:
+    image: ghcr.io/linuxserver/lidarr:{{ usenet_lidarr_version }}
+    container_name: lidarr
+{% if usenet_vpn_enabled is defined and usenet_vpn_enabled | bool %}
+    network_mode: service:vpn
+{% endif %}
+    environment:
+      - PUID={{ usenet_user_id }}
+      - PGID={{ usenet_group_id }}
+      - TZ=Europe/London
+      - UMASK_SET=022
+    volumes:
+      - {{ usenet_lidarr_config_volume_directory }}:/config
+      - {{ usenet_music_volume_directory }}:/music
+      - {{ usenet_downloads_volume_directory }}:/downloads
+{% if usenet_vpn_enabled is not defined or usenet_vpn_enabled | bool == false %}
+    ports:
+      - {{ usenet_lidarr_network_interface }}:{{ usenet_lidarr_http_port }}:8686
+{% endif %}
+    restart: unless-stopped
+
   bazarr:
     image: ghcr.io/linuxserver/bazarr:{{ usenet_bazarr_version }}
     container_name: bazarr
@@ -122,6 +143,7 @@ services:
       - {{ usenet_sabnzbd_network_interface }}:{{ usenet_sabnzbd_https_port }}:9090
       - {{ usenet_sonarr_network_interface }}:{{ usenet_sonarr_http_port }}:8989
       - {{ usenet_radarr_network_interface }}:{{ usenet_radarr_http_port }}:7878
+      - {{ usenet_lidarr_network_interface }}:{{ usenet_lidarr_http_port }}:8686
       - {{ usenet_bazarr_network_interface }}:{{ usenet_bazarr_http_port }}:6767
       - {{ usenet_nzbhydra2_network_interface }}:{{ usenet_nzbhydra2_http_port }}:5076
     command: ["-v", "{{ usenet_vpn_server }};${USERNAME};${PASSWORD}"]

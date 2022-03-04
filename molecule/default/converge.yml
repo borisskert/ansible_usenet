@@ -3,5 +3,7 @@
   hosts: all
   become: true
 
-  roles:
-    - role: ansible_usenet
+  tasks:
+    - name: "Include role"
+      include_role:
+        name: "ansible_usenet"

@@ -2,7 +2,7 @@
 version: "3.2"
 services:
   sabnzbd:
-    image: ghcr.io/linuxserver/sabnzbd:{{ usenet_sabnzbd_version }}
+    image: lscr.io/linuxserver/sabnzbd:{{ usenet_sabnzbd_version }}
     container_name: sabnzbd
 {% if usenet_vpn_enabled is defined and usenet_vpn_enabled | bool %}
     network_mode: service:vpn
@@ -24,7 +24,7 @@ services:
     restart: unless-stopped
 
   sonarr:
-    image: ghcr.io/linuxserver/sonarr:{{ usenet_sonarr_version }}
+    image: lscr.io/linuxserver/sonarr:{{ usenet_sonarr_version }}
     container_name: sonarr
 {% if usenet_vpn_enabled is defined and usenet_vpn_enabled | bool %}
     network_mode: service:vpn
@@ -47,7 +47,7 @@ services:
     restart: unless-stopped
 
   radarr:
-    image: ghcr.io/linuxserver/radarr:{{ usenet_radarr_version }}
+    image: lscr.io/linuxserver/radarr:{{ usenet_radarr_version }}
     container_name: radarr
 {% if usenet_vpn_enabled is defined and usenet_vpn_enabled | bool %}
     network_mode: service:vpn
@@ -68,7 +68,7 @@ services:
     restart: unless-stopped
 
   lidarr:
-    image: ghcr.io/linuxserver/lidarr:{{ usenet_lidarr_version }}
+    image: lscr.io/linuxserver/lidarr:{{ usenet_lidarr_version }}
     container_name: lidarr
 {% if usenet_vpn_enabled is defined and usenet_vpn_enabled | bool %}
     network_mode: service:vpn
@@ -110,7 +110,7 @@ services:
     restart: unless-stopped
 
   nzbhydra2:
-    image: ghcr.io/linuxserver/nzbhydra2:{{ usenet_nzbhydra2_version }}
+    image: lscr.io/linuxserver/nzbhydra2:{{ usenet_nzbhydra2_version }}
     container_name: nzbhydra2
 {% if usenet_vpn_enabled is defined and usenet_vpn_enabled | bool %}
     network_mode: service:vpn

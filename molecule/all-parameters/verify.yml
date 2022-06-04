@@ -16,7 +16,7 @@
           version: "3.2"
           services:
             sabnzbd:
-              image: lscr.io/linuxserver/sabnzbd:version-3.1.1
+              image: linuxserver/sabnzbd:version-3.1.1
               container_name: sabnzbd
               environment:
                 - PUID=777
@@ -33,7 +33,7 @@
               restart: unless-stopped
 
             sonarr:
-              image: lscr.io/linuxserver/sonarr:version-2.0.0.5344
+              image: linuxserver/sonarr:version-2.0.0.5344
               container_name: sonarr
               environment:
                 - PUID=777
@@ -51,7 +51,7 @@
               restart: unless-stopped
 
             radarr:
-              image: lscr.io/linuxserver/radarr:version-3.0.0.4127
+              image: linuxserver/radarr:version-3.0.0.4127
               container_name: radarr
               environment:
                 - PUID=777
@@ -67,7 +67,7 @@
               restart: unless-stopped
 
             lidarr:
-              image: lscr.io/linuxserver/lidarr:version-0.8.0.1928
+              image: linuxserver/lidarr:version-0.8.0.1928
               container_name: lidarr
               environment:
                 - PUID=777
@@ -83,7 +83,7 @@
               restart: unless-stopped
 
             bazarr:
-              image: ghcr.io/linuxserver/bazarr:version-v0.9.0.6
+              image: linuxserver/bazarr:version-v0.9.0.6
               container_name: bazarr
               environment:
                 - PUID=777
@@ -99,7 +99,7 @@
               restart: unless-stopped
 
             nzbhydra2:
-              image: lscr.io/linuxserver/nzbhydra2:version-v3.5.1
+              image: linuxserver/nzbhydra2:version-v3.5.1
               container_name: nzbhydra2
               environment:
                 - PUID=777
